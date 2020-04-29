@@ -1,0 +1,20 @@
+name: paginate_firestore
+description: An easy way to do pagination in firestore data.
+version: 0.1.0
+author: Venkatesh Prasad V M
+homepage: https://github.com/excogitatr/paginate_firestore
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  bloc: ^4.0.0
+  flutter_bloc: ^4.0.0
+  cloud_firestore: ^0.13.5
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  effective_dart: ^1.2.1
