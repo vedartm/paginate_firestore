@@ -1,0 +1,24 @@
+{
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "adamdupuis",
+      "name": "Adam Dupuis",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/6547826?v=4",
+      "profile": "https://adamdupuis.com",
+      "contributions": [
+        "code"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7,
+  "projectName": "paginate_firestore",
+  "projectOwner": "excogitatr",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "skipCi": true
+}
