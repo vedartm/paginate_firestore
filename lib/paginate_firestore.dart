@@ -16,6 +16,7 @@ class PaginateFirestore extends StatefulWidget {
     Key key,
     @required this.itemBuilder,
     @required this.query,
+    this.startAfterDocument,
     this.itemsPerPage = 15,
     this.onError,
     this.emptyDisplay = const EmptyDisplay(),
@@ -35,6 +36,7 @@ class PaginateFirestore extends StatefulWidget {
   final Widget emptyDisplay;
   final ScrollPhysics physics;
   final Query query;
+  final DocumentSnapshot startAfterDocument;
   final bool reverse;
   final Axis scrollDirection;
   final Widget separator;
@@ -77,7 +79,11 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
   @override
   void initState() {
     super.initState();
-    _bloc = PaginationBloc(widget.query, widget.itemsPerPage)..add(PageFetch());
+    _bloc = PaginationBloc(
+      widget.query,
+      widget.itemsPerPage,
+      widget.startAfterDocument,
+    )..add(PageFetch());
   }
 
   Widget _buildListView(PaginationLoaded loadedState) {

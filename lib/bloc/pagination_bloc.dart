@@ -10,11 +10,12 @@ part 'pagination_event.dart';
 part 'pagination_state.dart';
 
 class PaginationBloc extends Bloc<PaginationEvent, PaginationState> {
-  PaginationBloc(this._query, this._limit);
+  PaginationBloc(this._query, this._limit, this._startAfterDocument);
 
   DocumentSnapshot _lastDocument;
   final Query _query;
   final int _limit;
+  final DocumentSnapshot _startAfterDocument;
 
   @override
   Stream<PaginationState> mapEventToState(
@@ -58,6 +59,8 @@ class PaginationBloc extends Bloc<PaginationEvent, PaginationState> {
   Future<List<DocumentSnapshot>> _getDocumentSnapshots() async {
     final localQuery = (_lastDocument != null)
         ? _query.startAfterDocument(_lastDocument)
+        : _startAfterDocument != null
+        ? _query.startAfterDocument(_startAfterDocument)
         : _query;
     try {
       final querySnapshot = await localQuery.limit(_limit).getDocuments();
