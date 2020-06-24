@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
-import 'package:meta/meta.dart';
 
 part 'pagination_event.dart';
 part 'pagination_state.dart';
@@ -60,8 +59,8 @@ class PaginationBloc extends Bloc<PaginationEvent, PaginationState> {
     final localQuery = (_lastDocument != null)
         ? _query.startAfterDocument(_lastDocument)
         : _startAfterDocument != null
-        ? _query.startAfterDocument(_startAfterDocument)
-        : _query;
+            ? _query.startAfterDocument(_startAfterDocument)
+            : _query;
     try {
       final querySnapshot = await localQuery.limit(_limit).getDocuments();
       print(querySnapshot.documents.length);
