@@ -13,6 +13,15 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "GauthamAsir",
+      "name": "Gautham",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/26927742?v=4",
+      "profile": "https://gauthamasir.github.io/Portfolio_Dart/",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
