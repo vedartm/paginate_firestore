@@ -32,12 +32,14 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
       ),
       body: PaginateFirestore(
-        itemBuilder: (context, documentSnapshot) => ListTile(
+        //item builder type is compulsory.
+        itemBuilderType: PaginateBuilderType.listView, //Change types accordingly
+        itemBuilder: (index, context, documentSnapshot) => ListTile(
           leading: CircleAvatar(child: Icon(Icons.person)),
           title: Text(documentSnapshot.data['name']),
           subtitle: Text(documentSnapshot.documentID),
         ),
-        // orderBy is compulsary to enable pagination
+        // orderBy is compulsory to enable pagination
         query: Firestore.instance.collection('users').orderBy('name'),
       ),
     );
