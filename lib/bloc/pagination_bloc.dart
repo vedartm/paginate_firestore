@@ -9,7 +9,11 @@ part 'pagination_event.dart';
 part 'pagination_state.dart';
 
 class PaginationBloc extends Bloc<PaginationEvent, PaginationState> {
-  PaginationBloc(this._query, this._limit, this._startAfterDocument);
+  PaginationBloc(
+    this._query,
+    this._limit,
+    this._startAfterDocument,
+  ) : super(PaginationInitial());
 
   DocumentSnapshot _lastDocument;
   final Query _query;
@@ -48,9 +52,6 @@ class PaginationBloc extends Bloc<PaginationEvent, PaginationState> {
       yield PaginationInitial();
     }
   }
-
-  @override
-  PaginationState get initialState => PaginationInitial();
 
   bool _hasReachedEnd(PaginationState state) =>
       state is PaginationLoaded && state.hasReachedEnd;

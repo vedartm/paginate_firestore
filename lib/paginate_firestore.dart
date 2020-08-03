@@ -34,23 +34,24 @@ class PaginateFirestore extends StatefulWidget {
       : super(key: key);
 
   final Widget bottomLoader;
-  final Widget initialLoader;
-  final EdgeInsets padding;
   final Widget emptyDisplay;
+  final SliverGridDelegate gridDelegate;
+  final Widget initialLoader;
+  final dynamic itemBuilderType;
+  final int itemsPerPage;
+  final EdgeInsets padding;
   final ScrollPhysics physics;
   final Query query;
-  final DocumentSnapshot startAfterDocument;
   final bool reverse;
   final Axis scrollDirection;
   final Widget separator;
   final bool shrinkWrap;
-  final Widget Function(Exception) onError;
-  final int itemsPerPage;
-  final dynamic itemBuilderType;
-  final SliverGridDelegate gridDelegate;
+  final DocumentSnapshot startAfterDocument;
 
   @override
   _PaginateFirestoreState createState() => _PaginateFirestoreState();
+
+  final Widget Function(Exception) onError;
 
   final Widget Function(int, BuildContext, DocumentSnapshot) itemBuilder;
 }
@@ -62,7 +63,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PaginationBloc, PaginationState>(
-      bloc: _bloc,
+      cubit: _bloc,
       builder: (context, state) {
         if (state is PaginationInitial) {
           return widget.initialLoader;

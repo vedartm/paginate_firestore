@@ -24,7 +24,7 @@ In your pubspec.yaml
 
 ```yaml
 dependencies:
-  paginate_firestore: ^0.1.1
+  paginate_firestore: ^0.1.2
 ```
 
 Import it
