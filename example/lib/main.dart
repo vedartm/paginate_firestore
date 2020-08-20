@@ -37,11 +37,11 @@ class HomePage extends StatelessWidget {
             PaginateBuilderType.gridView, //Change types accordingly
         itemBuilder: (index, context, documentSnapshot) => ListTile(
           leading: CircleAvatar(child: Icon(Icons.person)),
-          title: Text(documentSnapshot.data['name']),
-          subtitle: Text(documentSnapshot.documentID),
+          title: Text(documentSnapshot.data()['name']),
+          subtitle: Text(documentSnapshot.id),
         ),
         // orderBy is compulsory to enable pagination
-        query: Firestore.instance.collection('users').orderBy('name'),
+        query: FirebaseFirestore.instance.collection('users').orderBy('name'),
       ),
     );
   }
