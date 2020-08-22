@@ -1,3 +1,7 @@
+## 0.1.3
+
+- Updated packages to latest version
+
 ## 0.1.2
 
 - Added GridView support using the attribute `itemBuilderType: PaginateBuilderType.gridView`
