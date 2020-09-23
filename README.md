@@ -47,6 +47,30 @@ Implement it
       )
 ```
 
+To use with listeners:
+
+```dart
+      PaginateRefreshedChangeListener refreshChangeListener = PaginateRefreshedChangeListener();
+
+      RefreshIndicator(
+        child: PaginateFirestore(
+          itemBuilder: (context, documentSnapshot) => ListTile(
+            leading: CircleAvatar(child: Icon(Icons.person)),
+            title: Text(documentSnapshot.data['name']),
+            subtitle: Text(documentSnapshot.documentID),
+          ),
+          // orderBy is compulsary to enable pagination
+          query: Firestore.instance.collection('users').orderBy('name'),
+          listeners: [
+            refreshChangeListener,
+          ],
+        ),
+        onRefresh: () async {
+          refreshChangeListener.refreshed = true;
+        },
+      )
+```
+
 ## Contributions
 
 Feel free to contribute to this project.

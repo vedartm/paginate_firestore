@@ -49,7 +49,15 @@ class PaginationBloc extends Bloc<PaginationEvent, PaginationState> {
       }
     }
     if (event is PageRefreshed) {
-      yield PaginationInitial();
+      _lastDocument = null;
+
+      final firstItems = await _getDocumentSnapshots();
+      yield PaginationLoaded(
+        documentSnapshots: firstItems,
+        hasReachedEnd: firstItems.isEmpty,
+      );
+
+      //yield PaginationInitial();
     }
   }
 
