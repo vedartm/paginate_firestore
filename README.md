@@ -1,9 +1,7 @@
 # Pagination in Firestore
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-
-[![All Contributors](https://img.shields.io/badge/all_contributors-3-orange.svg?style=flat-square)](#contributors-)
-
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![pub package](https://img.shields.io/pub/v/paginate_firestore.svg)](https://pub.dev/packages/paginate_firestore)
@@ -101,12 +99,12 @@ Thanks goes to these wonderful people:
     <td align="center"><a href="https://adamdupuis.com"><img src="https://avatars1.githubusercontent.com/u/6547826?v=4" width="100px;" alt=""/><br /><sub><b>Adam Dupuis</b></sub></a><br /><a href="https://github.com/excogitatr/paginate_firestore/commits?author=adamdupuis" title="Code">💻</a></td>
     <td align="center"><a href="https://gauthamasir.github.io/Portfolio_Dart/"><img src="https://avatars1.githubusercontent.com/u/26927742?v=4" width="100px;" alt=""/><br /><sub><b>Gautham</b></sub></a><br /><a href="https://github.com/excogitatr/paginate_firestore/commits?author=GauthamAsir" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/imhafeez"><img src="https://avatars3.githubusercontent.com/u/21155655?v=4" width="100px;" alt=""/><br /><sub><b>Hafeez Ahmed</b></sub></a><br /><a href="https://github.com/excogitatr/paginate_firestore/commits?author=imhafeez" title="Code">💻</a></td>
+    <td align="center"><a href="http://claudemir.casa"><img src="https://avatars3.githubusercontent.com/u/7956750?v=4" width="100px;" alt=""/><br /><sub><b>Claudemir Casa</b></sub></a><br /><a href="https://github.com/excogitatr/paginate_firestore/commits?author=claudemircasa" title="Code">💻</a></td>
   </tr>
 </table>
 
 <!-- markdownlint-enable -->
 <!-- prettier-ignore-end -->
-
 <!-- ALL-CONTRIBUTORS-LIST:END -->
 
 This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!
