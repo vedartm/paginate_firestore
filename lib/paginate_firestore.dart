@@ -77,6 +77,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
               : ErrorDisplay(exception: state.error);
         } else {
           final loadedState = state as PaginationLoaded;
+
           if (loadedState.documentSnapshots.isEmpty) {
             return widget.emptyDisplay;
           }
@@ -93,16 +94,16 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
     super.initState();
 
     if (widget.listeners != null) {
-      for (ChangeNotifier listener in widget.listeners) {
+      for (var listener in widget.listeners) {
         if (listener is PaginateRefreshedChangeListener) {
           listener.addListener(() {
             if (listener.refreshed) {
               refresh();
             }
           });
-        } else if (listener is PaginateSearchChangeListener) {
+        } else if (listener is PaginateFilterChangeListener) {
           listener.addListener(() {
-            throw new UnimplementedError();
+            throw UnimplementedError();
           });
         }
       }
@@ -120,63 +121,75 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
   }
 
   Widget _buildGridView(PaginationLoaded loadedState) {
-    return MultiProvider(
-      providers: widget.listeners
-          .map((_listener) => ChangeNotifierProvider(
-                create: (context) => _listener,
-              ))
-          .toList(),
-      child: GridView.builder(
-        controller: _scrollController,
-        itemCount: loadedState.hasReachedEnd
-            ? loadedState.documentSnapshots.length
-            : loadedState.documentSnapshots.length + 1,
-        gridDelegate: widget.gridDelegate,
-        reverse: widget.reverse,
-        shrinkWrap: widget.shrinkWrap,
-        scrollDirection: widget.scrollDirection,
-        physics: widget.physics,
-        padding: widget.padding,
-        itemBuilder: (context, index) {
-          if (index >= loadedState.documentSnapshots.length) {
-            _bloc.add(PageFetch());
-            return widget.bottomLoader;
-          }
-          return widget.itemBuilder(
-              index, context, loadedState.documentSnapshots[index]);
-        },
-      ),
+    var gridView = GridView.builder(
+      controller: _scrollController,
+      itemCount: loadedState.hasReachedEnd
+          ? loadedState.documentSnapshots.length
+          : loadedState.documentSnapshots.length + 1,
+      gridDelegate: widget.gridDelegate,
+      reverse: widget.reverse,
+      shrinkWrap: widget.shrinkWrap,
+      scrollDirection: widget.scrollDirection,
+      physics: widget.physics,
+      padding: widget.padding,
+      itemBuilder: (context, index) {
+        if (index >= loadedState.documentSnapshots.length) {
+          _bloc.add(PageFetch());
+          return widget.bottomLoader;
+        }
+        return widget.itemBuilder(
+            index, context, loadedState.documentSnapshots[index]);
+      },
     );
+
+    if (widget.listeners != null && widget.listeners.length > 0) {
+      return MultiProvider(
+        providers: widget.listeners
+            .map((_listener) => ChangeNotifierProvider(
+                  create: (context) => _listener,
+                ))
+            .toList(),
+        child: gridView,
+      );
+    }
+
+    return gridView;
   }
 
   Widget _buildListView(PaginationLoaded loadedState) {
-    return MultiProvider(
-      providers: widget.listeners
-          .map((_listener) => ChangeNotifierProvider(
-                create: (context) => _listener,
-              ))
-          .toList(),
-      child: ListView.separated(
-        controller: _scrollController,
-        reverse: widget.reverse,
-        shrinkWrap: widget.shrinkWrap,
-        scrollDirection: widget.scrollDirection,
-        physics: widget.physics,
-        padding: widget.padding,
-        separatorBuilder: (context, index) => widget.separator,
-        itemCount: loadedState.hasReachedEnd
-            ? loadedState.documentSnapshots.length
-            : loadedState.documentSnapshots.length + 1,
-        itemBuilder: (context, index) {
-          if (index >= loadedState.documentSnapshots.length) {
-            _bloc.add(PageFetch());
-            return widget.bottomLoader;
-          }
-          return widget.itemBuilder(
-              index, context, loadedState.documentSnapshots[index]);
-        },
-      ),
+    var listView = ListView.separated(
+      controller: _scrollController,
+      reverse: widget.reverse,
+      shrinkWrap: widget.shrinkWrap,
+      scrollDirection: widget.scrollDirection,
+      physics: widget.physics,
+      padding: widget.padding,
+      separatorBuilder: (context, index) => widget.separator,
+      itemCount: loadedState.hasReachedEnd
+          ? loadedState.documentSnapshots.length
+          : loadedState.documentSnapshots.length + 1,
+      itemBuilder: (context, index) {
+        if (index >= loadedState.documentSnapshots.length) {
+          _bloc.add(PageFetch());
+          return widget.bottomLoader;
+        }
+        return widget.itemBuilder(
+            index, context, loadedState.documentSnapshots[index]);
+      },
     );
+
+    if (widget.listeners != null && widget.listeners.length > 0) {
+      return MultiProvider(
+        providers: widget.listeners
+            .map((_listener) => ChangeNotifierProvider(
+                  create: (context) => _listener,
+                ))
+            .toList(),
+        child: listView,
+      );
+    }
+
+    return listView;
   }
 }
 
