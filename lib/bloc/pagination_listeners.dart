@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 class PaginateChangeListener extends ChangeNotifier {}
+
 class PaginateRefreshedChangeListener extends PaginateChangeListener {
   bool _refreshed = false;
 
@@ -13,7 +14,7 @@ class PaginateRefreshedChangeListener extends PaginateChangeListener {
     }
   }
 
-  get refreshed {
+  bool get refreshed {
     return _refreshed;
   }
 }
@@ -30,7 +31,7 @@ class PaginateSearchChangeListener extends PaginateChangeListener {
     }
   }
 
-  get search {
+  String get search {
     return _searchTerm;
   }
 }

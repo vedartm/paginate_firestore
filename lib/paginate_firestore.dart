@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
-import 'bloc/pagination_listeners.dart';
 import 'bloc/pagination_bloc.dart';
+import 'bloc/pagination_listeners.dart';
 import 'widgets/bottom_loader.dart';
 import 'widgets/empty_display.dart';
 import 'widgets/empty_separator.dart';
@@ -101,7 +101,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
               refresh();
             }
           });
-        } else if (listener is PaginateFilterChangeListener) {
+        } else if (listener is PaginateSearchChangeListener) {
           listener.addListener(() {
             throw UnimplementedError();
           });
