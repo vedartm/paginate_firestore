@@ -1,3 +1,8 @@
+## 0.2.0
+
+- Added scroll controller using `scrollController` attribute
+- Added support for Search and Refresh listeners
+
 ## 0.1.3
 
 - Updated packages to latest version

@@ -14,27 +14,28 @@ import 'widgets/error_display.dart';
 import 'widgets/initial_loader.dart';
 
 class PaginateFirestore extends StatefulWidget {
-  const PaginateFirestore(
-      {Key key,
-      @required this.itemBuilder,
-      @required this.query,
-      @required this.itemBuilderType,
-      this.gridDelegate =
-          const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-      this.startAfterDocument,
-      this.itemsPerPage = 15,
-      this.onError,
-      this.emptyDisplay = const EmptyDisplay(),
-      this.separator = const EmptySeparator(),
-      this.initialLoader = const InitialLoader(),
-      this.bottomLoader = const BottomLoader(),
-      this.shrinkWrap = false,
-      this.reverse = false,
-      this.scrollDirection = Axis.vertical,
-      this.padding = const EdgeInsets.all(0),
-      this.physics,
-      this.listeners})
-      : super(key: key);
+  const PaginateFirestore({
+    Key key,
+    @required this.itemBuilder,
+    @required this.query,
+    @required this.itemBuilderType,
+    this.gridDelegate =
+        const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+    this.startAfterDocument,
+    this.itemsPerPage = 15,
+    this.onError,
+    this.emptyDisplay = const EmptyDisplay(),
+    this.separator = const EmptySeparator(),
+    this.initialLoader = const InitialLoader(),
+    this.bottomLoader = const BottomLoader(),
+    this.shrinkWrap = false,
+    this.reverse = false,
+    this.scrollDirection = Axis.vertical,
+    this.padding = const EdgeInsets.all(0),
+    this.physics,
+    this.listeners,
+    this.scrollController,
+  }) : super(key: key);
 
   final Widget bottomLoader;
   final Widget emptyDisplay;
@@ -42,15 +43,16 @@ class PaginateFirestore extends StatefulWidget {
   final Widget initialLoader;
   final dynamic itemBuilderType;
   final int itemsPerPage;
+  final List<ChangeNotifier> listeners;
   final EdgeInsets padding;
   final ScrollPhysics physics;
   final Query query;
   final bool reverse;
+  final ScrollController scrollController;
   final Axis scrollDirection;
   final Widget separator;
   final bool shrinkWrap;
   final DocumentSnapshot startAfterDocument;
-  final List<ChangeNotifier> listeners;
 
   @override
   _PaginateFirestoreState createState() => _PaginateFirestoreState();
@@ -62,7 +64,7 @@ class PaginateFirestore extends StatefulWidget {
 
 class _PaginateFirestoreState extends State<PaginateFirestore> {
   PaginationBloc _bloc;
-  final _scrollController = ScrollController();
+  ScrollController _scrollController;
 
   @override
   Widget build(BuildContext context) {
@@ -90,9 +92,14 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
   }
 
   @override
-  void initState() {
-    super.initState();
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
+  @override
+  void initState() {
+    _scrollController = widget.scrollController ?? ScrollController();
     if (widget.listeners != null) {
       for (var listener in widget.listeners) {
         if (listener is PaginateRefreshedChangeListener) {
@@ -114,11 +121,10 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
       widget.itemsPerPage,
       widget.startAfterDocument,
     )..add(PageFetch());
+    super.initState();
   }
 
-  void refresh() {
-    _bloc..add(PageRefreshed());
-  }
+  void refresh() => _bloc..add(PageRefreshed());
 
   Widget _buildGridView(PaginationLoaded loadedState) {
     var gridView = GridView.builder(
