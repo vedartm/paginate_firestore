@@ -25,6 +25,7 @@ class PaginateFirestore extends StatefulWidget {
     this.itemsPerPage = 15,
     this.onError,
     this.onReachedEnd,
+    this.onLoaded,
     this.emptyDisplay = const EmptyDisplay(),
     this.separator = const EmptySeparator(),
     this.initialLoader = const InitialLoader(),
@@ -63,6 +64,7 @@ class PaginateFirestore extends StatefulWidget {
   final Widget Function(int, BuildContext, DocumentSnapshot) itemBuilder;
 
   final void Function(PaginationLoaded) onReachedEnd;
+  final void Function(PaginationLoaded) onLoaded;
 }
 
 class _PaginateFirestoreState extends State<PaginateFirestore> {
@@ -83,7 +85,10 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
         } else {
           PaginationLoaded loadedState = state as PaginationLoaded;
 
-          if (loadedState.hasReachedEnd) {
+          if (widget.onLoaded != null) {
+            widget.onLoaded(loadedState);
+          }
+          if (loadedState.hasReachedEnd && widget.onReachedEnd != null) {
             widget.onReachedEnd(loadedState);
           }
 
