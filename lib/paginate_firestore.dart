@@ -24,6 +24,7 @@ class PaginateFirestore extends StatefulWidget {
     this.startAfterDocument,
     this.itemsPerPage = 15,
     this.onError,
+    this.onReachedEnd,
     this.emptyDisplay = const EmptyDisplay(),
     this.separator = const EmptySeparator(),
     this.initialLoader = const InitialLoader(),
@@ -34,7 +35,7 @@ class PaginateFirestore extends StatefulWidget {
     this.padding = const EdgeInsets.all(0),
     this.physics,
     this.listeners,
-    this.scrollController,
+    this.scrollController
   }) : super(key: key);
 
   final Widget bottomLoader;
@@ -60,6 +61,8 @@ class PaginateFirestore extends StatefulWidget {
   final Widget Function(Exception) onError;
 
   final Widget Function(int, BuildContext, DocumentSnapshot) itemBuilder;
+
+  final void Function(PaginationLoaded) onReachedEnd;
 }
 
 class _PaginateFirestoreState extends State<PaginateFirestore> {
@@ -78,7 +81,11 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
               ? widget.onError(state.error)
               : ErrorDisplay(exception: state.error);
         } else {
-          final loadedState = state as PaginationLoaded;
+          PaginationLoaded loadedState = state as PaginationLoaded;
+
+          if (loadedState.hasReachedEnd) {
+            widget.onReachedEnd(loadedState);
+          }
 
           if (loadedState.documentSnapshots.isEmpty) {
             return widget.emptyDisplay;
@@ -108,9 +115,11 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
               refresh();
             }
           });
-        } else if (listener is PaginateSearchChangeListener) {
+        } else if (listener is PaginateFilterChangeListener) {
           listener.addListener(() {
-            throw UnimplementedError();
+            if (listener.filter != null && listener.filter.isNotEmpty) {
+              filter(listener.filter);
+            }
           });
         }
       }
@@ -125,6 +134,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
   }
 
   void refresh() => _bloc..add(PageRefreshed());
+  void filter(_filter) => _bloc..add(PageFiltered(_filter));
 
   Widget _buildGridView(PaginationLoaded loadedState) {
     var gridView = GridView.builder(

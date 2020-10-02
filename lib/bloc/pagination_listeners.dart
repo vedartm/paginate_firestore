@@ -19,19 +19,19 @@ class PaginateRefreshedChangeListener extends PaginateChangeListener {
   }
 }
 
-class PaginateSearchChangeListener extends PaginateChangeListener {
-  String _searchTerm;
+class PaginateFilterChangeListener extends PaginateChangeListener {
+  String _filterTerm;
 
-  PaginateSearchChangeListener();
+  PaginateFilterChangeListener();
 
   set search(String value) {
-    _searchTerm = value;
+    _filterTerm = value;
     if (value.isNotEmpty) {
       notifyListeners();
     }
   }
 
-  String get search {
-    return _searchTerm;
+  String get filter {
+    return _filterTerm;
   }
 }

@@ -48,6 +48,26 @@ class PaginationBloc extends Bloc<PaginationEvent, PaginationState> {
         }
       }
     }
+    if (event is PageFiltered) {
+      if (state is PaginationLoaded) {
+        PaginationLoaded currentState = state as PaginationLoaded;
+        List<DocumentSnapshot> filteredItems = currentState.documentSnapshots.where((document) {
+          bool hasFilter = false;
+          document.data().forEach((key, value) {
+            if (value.toString().contains(event.filter)) {
+              hasFilter = true;
+            }
+          });
+          return hasFilter;
+        }).toList();
+
+        yield PaginationLoaded(
+            documentSnapshots: filteredItems,
+            hasReachedEnd: currentState.hasReachedEnd
+        );
+      }
+    }
+
     if (event is PageRefreshed) {
       _lastDocument = null;
 
@@ -56,8 +76,6 @@ class PaginationBloc extends Bloc<PaginationEvent, PaginationState> {
         documentSnapshots: firstItems,
         hasReachedEnd: firstItems.isEmpty,
       );
-
-      //yield PaginationInitial();
     }
   }
 
