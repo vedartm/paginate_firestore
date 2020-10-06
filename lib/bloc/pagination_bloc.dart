@@ -16,8 +16,8 @@ class PaginationBloc extends Bloc<PaginationEvent, PaginationState> {
   ) : super(PaginationInitial());
 
   DocumentSnapshot _lastDocument;
-  final Query _query;
   final int _limit;
+  final Query _query;
   final DocumentSnapshot _startAfterDocument;
 
   @override
@@ -50,9 +50,9 @@ class PaginationBloc extends Bloc<PaginationEvent, PaginationState> {
     }
     if (event is PageFiltered) {
       if (state is PaginationLoaded) {
-        PaginationLoaded currentState = state as PaginationLoaded;
-        List<DocumentSnapshot> filteredItems = currentState.documentSnapshots.where((document) {
-          bool hasFilter = false;
+        final currentState = state as PaginationLoaded;
+        final filteredItems = currentState.documentSnapshots.where((document) {
+          var hasFilter = false;
           document.data().forEach((key, value) {
             if (value.toString().contains(event.filter)) {
               hasFilter = true;
@@ -63,8 +63,7 @@ class PaginationBloc extends Bloc<PaginationEvent, PaginationState> {
 
         yield PaginationLoaded(
             documentSnapshots: filteredItems,
-            hasReachedEnd: currentState.hasReachedEnd
-        );
+            hasReachedEnd: currentState.hasReachedEnd);
       }
     }
 

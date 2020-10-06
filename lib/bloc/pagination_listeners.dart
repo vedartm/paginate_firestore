@@ -3,9 +3,9 @@ import 'package:flutter/widgets.dart';
 class PaginateChangeListener extends ChangeNotifier {}
 
 class PaginateRefreshedChangeListener extends PaginateChangeListener {
-  bool _refreshed = false;
-
   PaginateRefreshedChangeListener();
+
+  bool _refreshed = false;
 
   set refreshed(bool value) {
     _refreshed = value;
@@ -20,18 +20,18 @@ class PaginateRefreshedChangeListener extends PaginateChangeListener {
 }
 
 class PaginateFilterChangeListener extends PaginateChangeListener {
-  String _filterTerm;
-
   PaginateFilterChangeListener();
 
-  set search(String value) {
+  String _filterTerm;
+
+  set searchTerm(String value) {
     _filterTerm = value;
     if (value.isNotEmpty) {
       notifyListeners();
     }
   }
 
-  String get filter {
+  String get searchTerm {
     return _filterTerm;
   }
 }

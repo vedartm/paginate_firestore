@@ -14,30 +14,30 @@ import 'widgets/error_display.dart';
 import 'widgets/initial_loader.dart';
 
 class PaginateFirestore extends StatefulWidget {
-  const PaginateFirestore({
-    Key key,
-    @required this.itemBuilder,
-    @required this.query,
-    @required this.itemBuilderType,
-    this.gridDelegate =
-        const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-    this.startAfterDocument,
-    this.itemsPerPage = 15,
-    this.onError,
-    this.onReachedEnd,
-    this.onLoaded,
-    this.emptyDisplay = const EmptyDisplay(),
-    this.separator = const EmptySeparator(),
-    this.initialLoader = const InitialLoader(),
-    this.bottomLoader = const BottomLoader(),
-    this.shrinkWrap = false,
-    this.reverse = false,
-    this.scrollDirection = Axis.vertical,
-    this.padding = const EdgeInsets.all(0),
-    this.physics,
-    this.listeners,
-    this.scrollController
-  }) : super(key: key);
+  const PaginateFirestore(
+      {Key key,
+      @required this.itemBuilder,
+      @required this.query,
+      @required this.itemBuilderType,
+      this.gridDelegate =
+          const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+      this.startAfterDocument,
+      this.itemsPerPage = 15,
+      this.onError,
+      this.onReachedEnd,
+      this.onLoaded,
+      this.emptyDisplay = const EmptyDisplay(),
+      this.separator = const EmptySeparator(),
+      this.initialLoader = const InitialLoader(),
+      this.bottomLoader = const BottomLoader(),
+      this.shrinkWrap = false,
+      this.reverse = false,
+      this.scrollDirection = Axis.vertical,
+      this.padding = const EdgeInsets.all(0),
+      this.physics,
+      this.listeners,
+      this.scrollController})
+      : super(key: key);
 
   final Widget bottomLoader;
   final Widget emptyDisplay;
@@ -64,6 +64,7 @@ class PaginateFirestore extends StatefulWidget {
   final Widget Function(int, BuildContext, DocumentSnapshot) itemBuilder;
 
   final void Function(PaginationLoaded) onReachedEnd;
+
   final void Function(PaginationLoaded) onLoaded;
 }
 
@@ -83,7 +84,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
               ? widget.onError(state.error)
               : ErrorDisplay(exception: state.error);
         } else {
-          PaginationLoaded loadedState = state as PaginationLoaded;
+          final loadedState = state as PaginationLoaded;
 
           if (widget.onLoaded != null) {
             widget.onLoaded(loadedState);
@@ -122,8 +123,8 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
           });
         } else if (listener is PaginateFilterChangeListener) {
           listener.addListener(() {
-            if (listener.filter != null && listener.filter.isNotEmpty) {
-              filter(listener.filter);
+            if (listener.searchTerm != null && listener.searchTerm.isNotEmpty) {
+              filter(listener.searchTerm);
             }
           });
         }
@@ -139,7 +140,8 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
   }
 
   void refresh() => _bloc..add(PageRefreshed());
-  void filter(_filter) => _bloc..add(PageFiltered(_filter));
+
+  void filter(String _filter) => _bloc..add(PageFiltered(_filter));
 
   Widget _buildGridView(PaginationLoaded loadedState) {
     var gridView = GridView.builder(

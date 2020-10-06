@@ -1,7 +1,11 @@
+## 0.2.1
+
+- Added support for Search listener
+
 ## 0.2.0
 
 - Added scroll controller using `scrollController` attribute
-- Added support for Search and Refresh listeners
+- Added support for Refresh listener
 
 ## 0.1.3
 
