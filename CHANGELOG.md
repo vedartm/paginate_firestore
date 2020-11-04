@@ -1,3 +1,7 @@
+## 0.2.2
+
+- Added `header` and `footer` support
+
 ## 0.2.1
 
 - Added support for Search listener
