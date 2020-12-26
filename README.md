@@ -37,9 +37,10 @@ Implement it
 
 ```dart
       PaginateFirestore(
-        itemBuilder: (context, documentSnapshot) => ListTile(
+        itemBuilderType: PaginateBuilderType.listView, // listview and gridview
+        itemBuilder: (index, context, documentSnapshot) => ListTile(
           leading: CircleAvatar(child: Icon(Icons.person)),
-          title: Text(documentSnapshot.data['name']),
+          title: Text(documentSnapshot.data()['name']),
           subtitle: Text(documentSnapshot.documentID),
         ),
         // orderBy is compulsary to enable pagination
