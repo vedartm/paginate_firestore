@@ -1,4 +1,4 @@
-part of 'pagination_bloc.dart';
+part of 'pagination_cubit.dart';
 
 @immutable
 abstract class PaginationState {}

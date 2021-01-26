@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 
-import 'bloc/pagination_bloc.dart';
+import 'bloc/pagination_cubit.dart';
 import 'bloc/pagination_listeners.dart';
 import 'widgets/bottom_loader.dart';
 import 'widgets/empty_display.dart';
@@ -75,13 +75,13 @@ class PaginateFirestore extends StatefulWidget {
 }
 
 class _PaginateFirestoreState extends State<PaginateFirestore> {
-  PaginationBloc _bloc;
+  PaginationCubit _cubit;
   ScrollController _scrollController;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<PaginationBloc, PaginationState>(
-      cubit: _bloc,
+    return BlocBuilder<PaginationCubit, PaginationState>(
+      cubit: _cubit,
       builder: (context, state) {
         if (state is PaginationInitial) {
           return widget.initialLoader;
@@ -124,30 +124,26 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
         if (listener is PaginateRefreshedChangeListener) {
           listener.addListener(() {
             if (listener.refreshed) {
-              refresh();
+              _cubit.refreshPaginatedList();
             }
           });
         } else if (listener is PaginateFilterChangeListener) {
           listener.addListener(() {
             if (listener.searchTerm != null && listener.searchTerm.isNotEmpty) {
-              filter(listener.searchTerm);
+              _cubit.filterPaginatedList(listener.searchTerm);
             }
           });
         }
       }
     }
 
-    _bloc = PaginationBloc(
+    _cubit = PaginationCubit(
       widget.query,
       widget.itemsPerPage,
       widget.startAfterDocument,
-    )..add(PageFetch());
+    )..fetchPaginatedList();
     super.initState();
   }
-
-  void refresh() => _bloc..add(PageRefreshed());
-
-  void filter(String _filter) => _bloc..add(PageFiltered(_filter));
 
   Widget _buildGridView(PaginationLoaded loadedState) {
     var gridView = CustomScrollView(
@@ -164,7 +160,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
             delegate: SliverChildBuilderDelegate(
               (context, index) {
                 if (index >= loadedState.documentSnapshots.length) {
-                  _bloc.add(PageFetch());
+                  _cubit.fetchPaginatedList();
                   return widget.bottomLoader;
                 }
                 return widget.itemBuilder(
@@ -210,7 +206,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
                 final itemIndex = index ~/ 2;
                 if (index.isEven) {
                   if (itemIndex >= loadedState.documentSnapshots.length) {
-                    _bloc.add(PageFetch());
+                    _cubit.fetchPaginatedList();
                     return widget.bottomLoader;
                   }
                   return widget.itemBuilder(itemIndex, context,

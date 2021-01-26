@@ -37,7 +37,7 @@ class HomePage extends StatelessWidget {
       body: PaginateFirestore(
         //item builder type is compulsory.
         itemBuilderType:
-            PaginateBuilderType.gridView, //Change types accordingly
+            PaginateBuilderType.listView, //Change types accordingly
         itemBuilder: (index, context, documentSnapshot) => ListTile(
           leading: CircleAvatar(child: Icon(Icons.person)),
           title: Text(documentSnapshot.data()['name']),
