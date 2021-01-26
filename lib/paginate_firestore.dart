@@ -41,6 +41,7 @@ class PaginateFirestore extends StatefulWidget {
     this.scrollController,
     this.header,
     this.footer,
+    this.isLive = false,
   }) : super(key: key);
 
   final Widget bottomLoader;
@@ -58,6 +59,7 @@ class PaginateFirestore extends StatefulWidget {
   final Axis scrollDirection;
   final Widget separator;
   final bool shrinkWrap;
+  final bool isLive;
   final DocumentSnapshot startAfterDocument;
   final Widget header;
   final Widget footer;
@@ -141,6 +143,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
       widget.query,
       widget.itemsPerPage,
       widget.startAfterDocument,
+      isLive: widget.isLive,
     )..fetchPaginatedList();
     super.initState();
   }

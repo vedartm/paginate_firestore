@@ -45,6 +45,8 @@ class HomePage extends StatelessWidget {
         ),
         // orderBy is compulsory to enable pagination
         query: FirebaseFirestore.instance.collection('users').orderBy('name'),
+        // to fetch real-time data
+        isLive: true,
       ),
     );
   }

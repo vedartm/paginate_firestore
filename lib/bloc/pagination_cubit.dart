@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -11,31 +9,15 @@ class PaginationCubit extends Cubit<PaginationState> {
   PaginationCubit(
     this._query,
     this._limit,
-    this._startAfterDocument,
-  ) : super(PaginationInitial());
+    this._startAfterDocument, {
+    this.isLive = false,
+  }) : super(PaginationInitial());
 
   DocumentSnapshot _lastDocument;
   final int _limit;
   final Query _query;
   final DocumentSnapshot _startAfterDocument;
-
-  void fetchPaginatedList() async {
-    try {
-      if (state is PaginationInitial) {
-        refreshPaginatedList();
-      } else if (state is PaginationLoaded) {
-        final loadedState = state as PaginationLoaded;
-        if (loadedState.hasReachedEnd) return;
-        final newItems = await _getDocumentSnapshots();
-        emit(loadedState.copyWith(
-          documentSnapshots: loadedState.documentSnapshots + newItems,
-          hasReachedEnd: newItems.isEmpty,
-        ));
-      }
-    } on Exception catch (error) {
-      emit(PaginationError(error: error));
-    }
-  }
+  final bool isLive;
 
   void filterPaginatedList(String searchTerm) {
     if (state is PaginationLoaded) {
@@ -56,31 +38,78 @@ class PaginationCubit extends Cubit<PaginationState> {
     }
   }
 
-  Future<void> refreshPaginatedList() async {
+  void refreshPaginatedList() async {
     _lastDocument = null;
-
-    final firstItems = await _getDocumentSnapshots();
-    emit(PaginationLoaded(
-      documentSnapshots: firstItems,
-      hasReachedEnd: firstItems.isEmpty,
-    ));
+    final localQuery = _getQuery();
+    if (isLive) {
+      localQuery.snapshots().listen((querySnapshot) {
+        _emitPaginatedState(querySnapshot.docs);
+      });
+    } else {
+      final querySnapshot = await localQuery.get();
+      _emitPaginatedState(querySnapshot.docs);
+    }
   }
 
-  Future<List<DocumentSnapshot>> _getDocumentSnapshots() async {
-    final localQuery = (_lastDocument != null)
-        ? _query.startAfterDocument(_lastDocument)
-        : _startAfterDocument != null
-            ? _query.startAfterDocument(_startAfterDocument)
-            : _query;
+  void fetchPaginatedList() {
+    isLive ? _getLiveDocuments() : _getDocuments();
+  }
+
+  _getDocuments() async {
+    final localQuery = _getQuery();
     try {
-      final querySnapshot = await localQuery.limit(_limit).get();
-      print(querySnapshot.docs.length);
-      _lastDocument =
-          querySnapshot.docs.isNotEmpty ? querySnapshot.docs.last : null;
-      return querySnapshot.docs;
+      if (state is PaginationInitial) {
+        refreshPaginatedList();
+      } else if (state is PaginationLoaded) {
+        final loadedState = state as PaginationLoaded;
+        if (loadedState.hasReachedEnd) return;
+        final querySnapshot = await localQuery.get();
+        _emitPaginatedState(
+          querySnapshot.docs,
+          previousList: loadedState.documentSnapshots,
+        );
+      }
     } on PlatformException catch (exception) {
       print(exception);
       rethrow;
     }
+  }
+
+  _getLiveDocuments() {
+    final localQuery = _getQuery();
+    if (state is PaginationInitial) {
+      refreshPaginatedList();
+    } else if (state is PaginationLoaded) {
+      final loadedState = state as PaginationLoaded;
+      if (loadedState.hasReachedEnd) return;
+      localQuery.snapshots().listen((querySnapshot) {
+        _emitPaginatedState(
+          querySnapshot.docs,
+          previousList: loadedState.documentSnapshots,
+        );
+      });
+    }
+  }
+
+  void _emitPaginatedState(
+    List<QueryDocumentSnapshot> newList, {
+    List<QueryDocumentSnapshot> previousList = const [],
+  }) {
+    print(newList.length);
+    _lastDocument = newList.isNotEmpty ? newList.last : null;
+    emit(PaginationLoaded(
+      documentSnapshots: previousList + newList,
+      hasReachedEnd: newList.isEmpty,
+    ));
+  }
+
+  Query _getQuery() {
+    var localQuery = (_lastDocument != null)
+        ? _query.startAfterDocument(_lastDocument)
+        : _startAfterDocument != null
+            ? _query.startAfterDocument(_startAfterDocument)
+            : _query;
+    localQuery = localQuery.limit(_limit);
+    return localQuery;
   }
 }

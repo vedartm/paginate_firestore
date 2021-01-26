@@ -1,3 +1,8 @@
+## 0.3.0
+
+- Added `isLive` to fetch real-time data
+- Changed from bloc to cubit
+
 ## 0.2.2
 
 - Added `header` and `footer` support

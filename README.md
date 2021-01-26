@@ -24,7 +24,7 @@ In your pubspec.yaml
 
 ```yaml
 dependencies:
-  paginate_firestore: ^0.2.2
+  paginate_firestore: ^0.3.0
 ```
 
 Import it
@@ -44,6 +44,7 @@ Implement it
         ),
         // orderBy is compulsary to enable pagination
         query: Firestore.instance.collection('users').orderBy('name'),
+        isLive: true // to fetch real-time data
       )
 ```
 
