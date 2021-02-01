@@ -48,7 +48,7 @@ class PaginateFirestore extends StatefulWidget {
   final Widget emptyDisplay;
   final SliverGridDelegate gridDelegate;
   final Widget initialLoader;
-  final dynamic itemBuilderType;
+  final PaginateBuilderType itemBuilderType;
   final int itemsPerPage;
   final List<ChangeNotifier> listeners;
   final EdgeInsets padding;
