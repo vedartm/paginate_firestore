@@ -1,3 +1,7 @@
+## 0.3.0+1
+
+- Fixes documentation
+
 ## 0.3.0
 
 - Added `isLive` to fetch real-time data
