@@ -56,7 +56,7 @@ To use with listeners:
         child: PaginateFirestore(
           itemBuilder: (context, documentSnapshot) => ListTile(
             leading: CircleAvatar(child: Icon(Icons.person)),
-            title: Text(documentSnapshot.data['name']),
+            title: Text(documentSnapshot.data()['name']),
             subtitle: Text(documentSnapshot.documentID),
           ),
           // orderBy is compulsary to enable pagination
@@ -101,8 +101,8 @@ Thanks goes to these wonderful people:
     <td align="center"><a href="https://adamdupuis.com"><img src="https://avatars1.githubusercontent.com/u/6547826?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Adam Dupuis</b></sub></a><br /><a href="https://github.com/excogitatr/paginate_firestore/commits?author=adamdupuis" title="Code">💻</a></td>
     <td align="center"><a href="https://gauthamasir.github.io/Portfolio_Dart/"><img src="https://avatars1.githubusercontent.com/u/26927742?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Gautham</b></sub></a><br /><a href="https://github.com/excogitatr/paginate_firestore/commits?author=GauthamAsir" title="Code">💻</a></td>
     <td align="center"><a href="https://github.com/imhafeez"><img src="https://avatars3.githubusercontent.com/u/21155655?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Hafeez Ahmed</b></sub></a><br /><a href="https://github.com/excogitatr/paginate_firestore/commits?author=imhafeez" title="Code">💻</a></td>
-    <td align="center"><a href="http://claudemir.casa"><img src="https://avatars3.githubusercontent.com/u/7956750?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Claudemir Casa</b></sub></a><br /><a href="https://github.com/excogitatr/paginate_firestore/commits?author=claudemircasa" title="Code">💻</a></td>
-    <td align="center"><a href="http://www.nikhil27.com"><img src="https://avatars.githubusercontent.com/u/45140298?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nikhil27bYt</b></sub></a><br /><a href="https://github.com/excogitatr/paginate_firestore/commits?author=Nikhil27b" title="Documentation">📖</a></td>
+    <td align="center"><a href="https://claudemir.casa"><img src="https://avatars3.githubusercontent.com/u/7956750?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Claudemir Casa</b></sub></a><br /><a href="https://github.com/excogitatr/paginate_firestore/commits?author=claudemircasa" title="Code">💻</a></td>
+    <td align="center"><a href="https://www.nikhil27.com"><img src="https://avatars.githubusercontent.com/u/45140298?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Nikhil27bYt</b></sub></a><br /><a href="https://github.com/excogitatr/paginate_firestore/commits?author=Nikhil27b" title="Documentation">📖</a></td>
   </tr>
 </table>
 
