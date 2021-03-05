@@ -22,7 +22,7 @@ class PaginateRefreshedChangeListener extends PaginateChangeListener {
 class PaginateFilterChangeListener extends PaginateChangeListener {
   PaginateFilterChangeListener();
 
-  String _filterTerm;
+  late String _filterTerm;
 
   set searchTerm(String value) {
     _filterTerm = value;
