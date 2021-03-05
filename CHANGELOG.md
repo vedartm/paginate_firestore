@@ -1,3 +1,7 @@
+## 1.0.0-nullsafety.0
+
+- BREAKING: Opt into null safety
+
 ## 0.3.1
 
 - Updates `cloud_firestore` and `firebase_core` to the latest 
