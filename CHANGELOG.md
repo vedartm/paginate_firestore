@@ -1,3 +1,7 @@
+## 0.3.1
+
+- Updates `cloud_firestore` and `firebase_core` to the latest 
+
 ## 0.3.0+1
 
 - Fixes documentation
