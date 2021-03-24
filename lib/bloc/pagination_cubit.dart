@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
@@ -18,6 +20,8 @@ class PaginationCubit extends Cubit<PaginationState> {
   final Query _query;
   final DocumentSnapshot? _startAfterDocument;
   final bool isLive;
+
+  final List<StreamSubscription<QuerySnapshot>> _streams = List<StreamSubscription<QuerySnapshot>>();
 
   void filterPaginatedList(String searchTerm) {
     if (state is PaginationLoaded) {
@@ -42,9 +46,11 @@ class PaginationCubit extends Cubit<PaginationState> {
     _lastDocument = null;
     final localQuery = _getQuery();
     if (isLive) {
-      localQuery.snapshots().listen((querySnapshot) {
+      StreamSubscription<QuerySnapshot> listener = localQuery.snapshots().listen((querySnapshot) {
         _emitPaginatedState(querySnapshot.docs);
       });
+
+      _streams.add(listener);
     } else {
       final querySnapshot = await localQuery.get();
       _emitPaginatedState(querySnapshot.docs);
@@ -83,13 +89,15 @@ class PaginationCubit extends Cubit<PaginationState> {
     } else if (state is PaginationLoaded) {
       final loadedState = state as PaginationLoaded;
       if (loadedState.hasReachedEnd) return;
-      localQuery.snapshots().listen((querySnapshot) {
+      StreamSubscription<QuerySnapshot> listener =  localQuery.snapshots().listen((querySnapshot) {
         _emitPaginatedState(
           querySnapshot.docs,
           previousList:
               loadedState.documentSnapshots as List<QueryDocumentSnapshot>,
         );
       });
+
+      _streams.add(listener);
     }
   }
 
@@ -113,5 +121,9 @@ class PaginationCubit extends Cubit<PaginationState> {
             : _query;
     localQuery = localQuery.limit(_limit);
     return localQuery;
+  }
+
+  void dispose() {
+    _streams.forEach((listener) => listener.cancel());
   }
 }

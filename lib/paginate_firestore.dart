@@ -115,6 +115,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
   @override
   void dispose() {
     _scrollController.dispose();
+    _cubit.dispose();
     super.dispose();
   }
 
