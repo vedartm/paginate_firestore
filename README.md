@@ -39,7 +39,7 @@ Implement it
         itemBuilder: (index, context, documentSnapshot) => ListTile(
           leading: CircleAvatar(child: Icon(Icons.person)),
           title: Text(documentSnapshot.data()['name']),
-          subtitle: Text(documentSnapshot.documentID),
+          subtitle: Text(documentSnapshot.id),
         ),
         // orderBy is compulsary to enable pagination
         query: Firestore.instance.collection('users').orderBy('name'),
