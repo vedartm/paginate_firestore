@@ -22,7 +22,7 @@ In your pubspec.yaml
 
 ```yaml
 dependencies:
-  paginate_firestore: ^0.3.1
+  paginate_firestore: latest
 ```
 
 Import it
@@ -35,16 +35,22 @@ Implement it
 
 ```dart
       PaginateFirestore(
-        itemBuilderType: PaginateBuilderType.listView, // listview and gridview
-        itemBuilder: (index, context, documentSnapshot) => ListTile(
-          leading: CircleAvatar(child: Icon(Icons.person)),
-          title: Text(documentSnapshot.data()['name']),
-          subtitle: Text(documentSnapshot.id),
-        ),
-        // orderBy is compulsary to enable pagination
-        query: Firestore.instance.collection('users').orderBy('name'),
-        isLive: true // to fetch real-time data
-      )
+        //item builder type is compulsory.
+        itemBuilder: (index, context, documentSnapshot) {
+          final data = documentSnapshot.data() as Map?;
+          return ListTile(
+            leading: CircleAvatar(child: Icon(Icons.person)),
+            title: data == null ? Text('Error in data') : Text(data['name']),
+            subtitle: Text(documentSnapshot.id),
+          );
+        },
+        // orderBy is compulsory to enable pagination
+        query: FirebaseFirestore.instance.collection('users').orderBy('name'),
+        //Change types accordingly
+        itemBuilderType: PaginateBuilderType.listView, 
+        // to fetch real-time data
+        isLive: true,
+      ),
 ```
 
 To use with listeners:

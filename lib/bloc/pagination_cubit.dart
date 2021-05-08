@@ -21,7 +21,7 @@ class PaginationCubit extends Cubit<PaginationState> {
   final DocumentSnapshot? _startAfterDocument;
   final bool isLive;
 
-  final List<StreamSubscription<QuerySnapshot>> _streams = List<StreamSubscription<QuerySnapshot>>();
+  final _streams = <StreamSubscription<QuerySnapshot>>[];
 
   void filterPaginatedList(String searchTerm) {
     if (state is PaginationLoaded) {
@@ -46,7 +46,7 @@ class PaginationCubit extends Cubit<PaginationState> {
     _lastDocument = null;
     final localQuery = _getQuery();
     if (isLive) {
-      StreamSubscription<QuerySnapshot> listener = localQuery.snapshots().listen((querySnapshot) {
+      final listener = localQuery.snapshots().listen((querySnapshot) {
         _emitPaginatedState(querySnapshot.docs);
       });
 
@@ -89,7 +89,7 @@ class PaginationCubit extends Cubit<PaginationState> {
     } else if (state is PaginationLoaded) {
       final loadedState = state as PaginationLoaded;
       if (loadedState.hasReachedEnd) return;
-      StreamSubscription<QuerySnapshot> listener =  localQuery.snapshots().listen((querySnapshot) {
+      final listener = localQuery.snapshots().listen((querySnapshot) {
         _emitPaginatedState(
           querySnapshot.docs,
           previousList:
@@ -123,6 +123,8 @@ class PaginationCubit extends Cubit<PaginationState> {
   }
 
   void dispose() {
-    _streams.forEach((listener) => listener.cancel());
+    for (var listener in _streams) {
+      listener.cancel();
+    }
   }
 }

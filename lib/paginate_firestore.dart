@@ -78,7 +78,6 @@ class PaginateFirestore extends StatefulWidget {
 
 class _PaginateFirestoreState extends State<PaginateFirestore> {
   PaginationCubit? _cubit;
-  late ScrollController _scrollController;
 
   @override
   Widget build(BuildContext context) {
@@ -114,14 +113,13 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
 
   @override
   void dispose() {
-    _scrollController.dispose();
-    _cubit.dispose();
+    widget.scrollController?.dispose();
+    _cubit?.dispose();
     super.dispose();
   }
 
   @override
   void initState() {
-    _scrollController = widget.scrollController ?? ScrollController();
     if (widget.listeners != null) {
       for (var listener in widget.listeners!) {
         if (listener is PaginateRefreshedChangeListener) {
@@ -152,6 +150,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
   Widget _buildGridView(PaginationLoaded loadedState) {
     var gridView = CustomScrollView(
       reverse: widget.reverse,
+      controller: widget.scrollController,
       shrinkWrap: widget.shrinkWrap,
       scrollDirection: widget.scrollDirection,
       physics: widget.physics,

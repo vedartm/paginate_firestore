@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -38,11 +38,14 @@ class HomePage extends StatelessWidget {
         //item builder type is compulsory.
         itemBuilderType:
             PaginateBuilderType.listView, //Change types accordingly
-        itemBuilder: (index, context, documentSnapshot) => ListTile(
-          leading: CircleAvatar(child: Icon(Icons.person)),
-          title: Text(documentSnapshot.data()['name']),
-          subtitle: Text(documentSnapshot.id),
-        ),
+        itemBuilder: (index, context, documentSnapshot) {
+          final data = documentSnapshot.data() as Map?;
+          return ListTile(
+            leading: CircleAvatar(child: Icon(Icons.person)),
+            title: data == null ? Text('Error in data') : Text(data['name']),
+            subtitle: Text(documentSnapshot.id),
+          );
+        },
         // orderBy is compulsory to enable pagination
         query: FirebaseFirestore.instance.collection('users').orderBy('name'),
         // to fetch real-time data

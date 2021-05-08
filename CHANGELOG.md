@@ -1,3 +1,7 @@
+## 1.0.0-nullsafety.1
+
+- Updates `cloud_firestore` version to v2.0.0
+
 ## 1.0.0-nullsafety.0
 
 - BREAKING: Opt into null safety
