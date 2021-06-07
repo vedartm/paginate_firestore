@@ -35,7 +35,10 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
       ),
       body: PaginateFirestore(
-        //item builder type is compulsory.
+        // Use SliverAppBar in header to make it sticky
+        header: SliverToBoxAdapter(child: Text('HEADER')),
+        footer: SliverToBoxAdapter(child: Text('FOOTER')),
+        // item builder type is compulsory.
         itemBuilderType:
             PaginateBuilderType.listView, //Change types accordingly
         itemBuilder: (index, context, documentSnapshot) {

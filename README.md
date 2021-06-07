@@ -1,7 +1,9 @@
 # Pagination in Firestore
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-6-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![pub package](https://img.shields.io/pub/v/paginate_firestore.svg)](https://pub.dev/packages/paginate_firestore)
@@ -22,7 +24,7 @@ In your pubspec.yaml
 
 ```yaml
 dependencies:
-  paginate_firestore: latest
+  paginate_firestore: # latest version
 ```
 
 Import it
@@ -47,7 +49,7 @@ Implement it
         // orderBy is compulsory to enable pagination
         query: FirebaseFirestore.instance.collection('users').orderBy('name'),
         //Change types accordingly
-        itemBuilderType: PaginateBuilderType.listView, 
+        itemBuilderType: PaginateBuilderType.listView,
         // to fetch real-time data
         isLive: true,
       ),

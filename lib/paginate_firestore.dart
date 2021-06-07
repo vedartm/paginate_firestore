@@ -155,7 +155,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
       scrollDirection: widget.scrollDirection,
       physics: widget.physics,
       slivers: <Widget>[
-        if (widget.header != null) SliverToBoxAdapter(child: widget.header),
+        if (widget.header != null) widget.header!,
         SliverPadding(
           padding: widget.padding,
           sliver: SliverGrid(
@@ -175,7 +175,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
             ),
           ),
         ),
-        if (widget.footer != null) SliverToBoxAdapter(child: widget.footer),
+        if (widget.footer != null) widget.footer!,
       ],
     );
 
@@ -201,7 +201,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
       scrollDirection: widget.scrollDirection,
       physics: widget.physics,
       slivers: <Widget>[
-        if (widget.header != null) SliverToBoxAdapter(child: widget.header),
+        if (widget.header != null) widget.header!,
         SliverPadding(
           padding: widget.padding,
           sliver: SliverList(
@@ -235,7 +235,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
             ),
           ),
         ),
-        if (widget.footer != null) SliverToBoxAdapter(child: widget.footer),
+        if (widget.footer != null) widget.footer!,
       ],
     );
 

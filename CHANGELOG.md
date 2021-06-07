@@ -1,3 +1,8 @@
+## 1.0.0
+
+- **BREAKING**: `header` and `footer` accepts only sliver widget. If you want to add a normal widget wrap it with `SliverToBoxAdapter(child: YourWidget())`. Check example for more clarity.
+- Updates dependencies to latest
+
 ## 1.0.0-nullsafety.1
 
 - Updates `cloud_firestore` version to v2.0.0
@@ -8,7 +13,7 @@
 
 ## 0.3.1
 
-- Updates `cloud_firestore` and `firebase_core` to the latest 
+- Updates `cloud_firestore` and `firebase_core` to the latest
 
 ## 0.3.0+1
 
