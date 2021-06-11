@@ -158,7 +158,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
       shrinkWrap: widget.shrinkWrap,
       scrollDirection: widget.scrollDirection,
       physics: widget.physics,
-      slivers: <Widget>[
+      slivers: [
         if (widget.header != null) widget.header!,
         SliverPadding(
           padding: widget.padding,
@@ -204,7 +204,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
       shrinkWrap: widget.shrinkWrap,
       scrollDirection: widget.scrollDirection,
       physics: widget.physics,
-      slivers: <Widget>[
+      slivers: [
         if (widget.header != null) widget.header!,
         SliverPadding(
           padding: widget.padding,
@@ -259,35 +259,32 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
 
   Widget _buildPageView(PaginationLoaded loadedState) {
     var pageView = CustomScrollView(
-      reverse: widget.reverse,
-      shrinkWrap: widget.shrinkWrap,
-      controller: widget.scrollController,
-      scrollDirection: widget.scrollDirection,
-      physics: widget.physics,
-      slivers: <Widget>[
-        if (widget.header != null) SliverToBoxAdapter(child: widget.header),
+      physics: NeverScrollableScrollPhysics(),
+      slivers: [
         SliverPadding(
-            padding: widget.padding,
-            sliver: SliverFillRemaining(
-              child: PreloadPageView.custom(
-                scrollDirection: Axis.vertical,
-                controller: widget.pageController,
-                childrenDelegate: SliverChildBuilderDelegate(
-                  (context, index) {
-                    if (index >= loadedState.documentSnapshots.length) {
-                      _cubit!.fetchPaginatedList();
-                      return widget.bottomLoader;
-                    }
-                    return widget.itemBuilder(
-                        index, context, loadedState.documentSnapshots[index]);
-                  },
-                  childCount: loadedState.hasReachedEnd
-                      ? loadedState.documentSnapshots.length
-                      : loadedState.documentSnapshots.length + 1,
-                ),
+          padding: widget.padding,
+          sliver: SliverFillRemaining(
+            child: PreloadPageView.custom(
+              reverse: widget.reverse,
+              controller: widget.pageController,
+              scrollDirection: widget.scrollDirection,
+              physics: widget.physics,
+              childrenDelegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  if (index >= loadedState.documentSnapshots.length) {
+                    _cubit!.fetchPaginatedList();
+                    return widget.bottomLoader;
+                  }
+                  return widget.itemBuilder(
+                      index, context, loadedState.documentSnapshots[index]);
+                },
+                childCount: loadedState.hasReachedEnd
+                    ? loadedState.documentSnapshots.length
+                    : loadedState.documentSnapshots.length + 1,
               ),
-            )),
-        if (widget.footer != null) SliverToBoxAdapter(child: widget.footer),
+            ),
+          ),
+        ),
       ],
     );
 
