@@ -5,6 +5,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:preload_page_view/preload_page_view.dart';
 import 'package:provider/provider.dart';
 
 import 'bloc/pagination_cubit.dart';
@@ -39,6 +40,8 @@ class PaginateFirestore extends StatefulWidget {
     this.physics,
     this.listeners,
     this.scrollController,
+    this.pageController,
+    this.onPageChanged,
     this.header,
     this.footer,
     this.isLive = false,
@@ -56,6 +59,7 @@ class PaginateFirestore extends StatefulWidget {
   final Query query;
   final bool reverse;
   final ScrollController? scrollController;
+  final PageController? pageController;
   final Axis scrollDirection;
   final Widget separator;
   final bool shrinkWrap;
@@ -74,6 +78,8 @@ class PaginateFirestore extends StatefulWidget {
   final void Function(PaginationLoaded)? onReachedEnd;
 
   final void Function(PaginationLoaded)? onLoaded;
+
+  final void Function(int)? onPageChanged;
 }
 
 class _PaginateFirestoreState extends State<PaginateFirestore> {
@@ -92,7 +98,6 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
               : ErrorDisplay(exception: state.error);
         } else {
           final loadedState = state as PaginationLoaded;
-
           if (widget.onLoaded != null) {
             widget.onLoaded!(loadedState);
           }
@@ -105,7 +110,9 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
           }
           return widget.itemBuilderType == PaginateBuilderType.listView
               ? _buildListView(loadedState)
-              : _buildGridView(loadedState);
+              : widget.itemBuilderType == PaginateBuilderType.gridView
+                  ? _buildGridView(loadedState)
+                  : _buildPageView(loadedState);
         }
       },
     );
@@ -154,7 +161,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
       shrinkWrap: widget.shrinkWrap,
       scrollDirection: widget.scrollDirection,
       physics: widget.physics,
-      slivers: <Widget>[
+      slivers: [
         if (widget.header != null) widget.header!,
         SliverPadding(
           padding: widget.padding,
@@ -200,7 +207,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
       shrinkWrap: widget.shrinkWrap,
       scrollDirection: widget.scrollDirection,
       physics: widget.physics,
-      slivers: <Widget>[
+      slivers: [
         if (widget.header != null) widget.header!,
         SliverPadding(
           padding: widget.padding,
@@ -252,6 +259,45 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
 
     return listView;
   }
+
+  Widget _buildPageView(PaginationLoaded loadedState) {
+    var pageView = Padding(
+      padding: widget.padding,
+      child: PageView.custom(
+        reverse: widget.reverse,
+        controller: widget.pageController,
+        scrollDirection: widget.scrollDirection,
+        physics: widget.physics,
+        onPageChanged: widget.onPageChanged,
+        childrenDelegate: SliverChildBuilderDelegate(
+          (context, index) {
+            if (index >= loadedState.documentSnapshots.length) {
+              _cubit!.fetchPaginatedList();
+              return widget.bottomLoader;
+            }
+            return widget.itemBuilder(
+                index, context, loadedState.documentSnapshots[index]);
+          },
+          childCount: loadedState.hasReachedEnd
+              ? loadedState.documentSnapshots.length
+              : loadedState.documentSnapshots.length + 1,
+        ),
+      ),
+    );
+
+    if (widget.listeners != null && widget.listeners!.isNotEmpty) {
+      return MultiProvider(
+        providers: widget.listeners!
+            .map((_listener) => ChangeNotifierProvider(
+                  create: (context) => _listener,
+                ))
+            .toList(),
+        child: pageView,
+      );
+    }
+
+    return pageView;
+  }
 }
 
-enum PaginateBuilderType { listView, gridView }
+enum PaginateBuilderType { listView, gridView, pageView }
