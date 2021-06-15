@@ -170,13 +170,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.0"
-  preload_page_view:
-    dependency: transitive
-    description:
-      name: preload_page_view
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.6"
   provider:
     dependency: transitive
     description:

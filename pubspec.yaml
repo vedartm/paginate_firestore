@@ -14,7 +14,6 @@ dependencies:
   flutter_bloc: ^7.0.1
   cloud_firestore: ^2.2.1
   provider: ^5.0.0
-  preload_page_view: ^0.1.6
 
 dev_dependencies:
   flutter_test:

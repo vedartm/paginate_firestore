@@ -41,6 +41,7 @@ class PaginateFirestore extends StatefulWidget {
     this.listeners,
     this.scrollController,
     this.pageController,
+    this.onPageChanged,
     this.header,
     this.footer,
     this.isLive = false,
@@ -58,7 +59,7 @@ class PaginateFirestore extends StatefulWidget {
   final Query query;
   final bool reverse;
   final ScrollController? scrollController;
-  final PreloadPageController? pageController;
+  final PageController? pageController;
   final Axis scrollDirection;
   final Widget separator;
   final bool shrinkWrap;
@@ -77,6 +78,8 @@ class PaginateFirestore extends StatefulWidget {
   final void Function(PaginationLoaded)? onReachedEnd;
 
   final void Function(PaginationLoaded)? onLoaded;
+
+  final void Function(int)? onPageChanged;
 }
 
 class _PaginateFirestoreState extends State<PaginateFirestore> {
@@ -258,34 +261,28 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
   }
 
   Widget _buildPageView(PaginationLoaded loadedState) {
-    var pageView = CustomScrollView(
-      physics: NeverScrollableScrollPhysics(),
-      slivers: [
-        SliverPadding(
-          padding: widget.padding,
-          sliver: SliverFillRemaining(
-            child: PreloadPageView.custom(
-              reverse: widget.reverse,
-              controller: widget.pageController,
-              scrollDirection: widget.scrollDirection,
-              physics: widget.physics,
-              childrenDelegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  if (index >= loadedState.documentSnapshots.length) {
-                    _cubit!.fetchPaginatedList();
-                    return widget.bottomLoader;
-                  }
-                  return widget.itemBuilder(
-                      index, context, loadedState.documentSnapshots[index]);
-                },
-                childCount: loadedState.hasReachedEnd
-                    ? loadedState.documentSnapshots.length
-                    : loadedState.documentSnapshots.length + 1,
-              ),
-            ),
-          ),
+    var pageView = Padding(
+      padding: widget.padding,
+      child: PageView.custom(
+        reverse: widget.reverse,
+        controller: widget.pageController,
+        scrollDirection: widget.scrollDirection,
+        physics: widget.physics,
+        onPageChanged: widget.onPageChanged,
+        childrenDelegate: SliverChildBuilderDelegate(
+          (context, index) {
+            if (index >= loadedState.documentSnapshots.length) {
+              _cubit!.fetchPaginatedList();
+              return widget.bottomLoader;
+            }
+            return widget.itemBuilder(
+                index, context, loadedState.documentSnapshots[index]);
+          },
+          childCount: loadedState.hasReachedEnd
+              ? loadedState.documentSnapshots.length
+              : loadedState.documentSnapshots.length + 1,
         ),
-      ],
+      ),
     );
 
     if (widget.listeners != null && widget.listeners!.isNotEmpty) {
