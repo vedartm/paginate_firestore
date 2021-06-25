@@ -25,6 +25,8 @@ class PaginateFirestore extends StatefulWidget {
         const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
     this.startAfterDocument,
     this.itemsPerPage = 15,
+    this.insertWidgetAfter,
+    this.intermediateWidget,
     this.onError,
     this.onReachedEnd,
     this.onLoaded,
@@ -52,6 +54,8 @@ class PaginateFirestore extends StatefulWidget {
   final Widget initialLoader;
   final PaginateBuilderType itemBuilderType;
   final int itemsPerPage;
+  final int? insertWidgetAfter;
+  final Widget? intermediateWidget;
   final List<ChangeNotifier>? listeners;
   final EdgeInsets padding;
   final ScrollPhysics? physics;
@@ -273,12 +277,16 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
             if (index >= loadedState.documentSnapshots.length) {
               _cubit!.fetchPaginatedList();
               return widget.bottomLoader;
-            } else if (index % 5 == 4) {
-              return widget.footer;
+            } else if (widget.insertWidgetAfter != null &&
+                index % widget.insertWidgetAfter! == 4) {
+              return widget.intermediateWidget;
             }
 
-            return widget.itemBuilder(index, context,
-                loadedState.documentSnapshots[index - (index / 5).floor()]);
+            return widget.itemBuilder(
+                index,
+                context,
+                loadedState.documentSnapshots[
+                    index - (index / widget.insertWidgetAfter!).floor()]);
           },
           childCount: loadedState.hasReachedEnd
               ? loadedState.documentSnapshots.length
