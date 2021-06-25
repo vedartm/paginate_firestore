@@ -273,9 +273,12 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
             if (index >= loadedState.documentSnapshots.length) {
               _cubit!.fetchPaginatedList();
               return widget.bottomLoader;
+            } else if (index % 5 == 4) {
+              return widget.footer;
             }
-            return widget.itemBuilder(
-                index, context, loadedState.documentSnapshots[index]);
+
+            return widget.itemBuilder(index, context,
+                loadedState.documentSnapshots[index - (index / 5).floor()]);
           },
           childCount: loadedState.hasReachedEnd
               ? loadedState.documentSnapshots.length
