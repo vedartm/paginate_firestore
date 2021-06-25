@@ -279,7 +279,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
               return widget.bottomLoader;
             } else if (widget.insertWidgetAfter != null &&
                 index > 0 &&
-                index % widget.insertWidgetAfter! == 0) {
+                index % widget.insertWidgetAfter! == 4) {
               return widget.intermediateWidget;
             }
 
