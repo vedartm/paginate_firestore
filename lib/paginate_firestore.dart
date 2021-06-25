@@ -278,6 +278,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
               _cubit!.fetchPaginatedList();
               return widget.bottomLoader;
             } else if (widget.insertWidgetAfter != null &&
+                index > 0 &&
                 index % widget.insertWidgetAfter! == 0) {
               return widget.intermediateWidget;
             }
