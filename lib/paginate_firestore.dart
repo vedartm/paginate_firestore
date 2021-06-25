@@ -277,10 +277,16 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
             if (index >= loadedState.documentSnapshots.length) {
               _cubit!.fetchPaginatedList();
               return widget.bottomLoader;
-            } else if (widget.insertWidgetAfter != null &&
-                index > 0 &&
-                index % widget.insertWidgetAfter! == 4) {
-              return widget.intermediateWidget;
+            } else {
+              if (widget.insertWidgetAfter != null && index > 0) {
+                if (widget.insertWidgetAfter! == 1) {
+                  if (index % 2 == 0) {
+                    return widget.intermediateWidget;
+                  }
+                } else if (index % widget.insertWidgetAfter! == 0) {
+                  return widget.intermediateWidget;
+                }
+              }
             }
 
             var i = widget.insertWidgetAfter == null
