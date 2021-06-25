@@ -25,7 +25,7 @@ class PaginateFirestore extends StatefulWidget {
         const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
     this.startAfterDocument,
     this.itemsPerPage = 15,
-    this.insertWidgetAfter,
+    this.insertWidgetEvery,
     this.intermediateWidget,
     this.onError,
     this.onReachedEnd,
@@ -54,7 +54,7 @@ class PaginateFirestore extends StatefulWidget {
   final Widget initialLoader;
   final PaginateBuilderType itemBuilderType;
   final int itemsPerPage;
-  final int? insertWidgetAfter;
+  final int? insertWidgetEvery;
   final Widget? intermediateWidget;
   final List<ChangeNotifier>? listeners;
   final EdgeInsets padding;
@@ -274,23 +274,28 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
         onPageChanged: widget.onPageChanged,
         childrenDelegate: SliverChildBuilderDelegate(
           (context, index) {
+            var pos = index;
             if (index >= loadedState.documentSnapshots.length) {
               _cubit!.fetchPaginatedList();
               return widget.bottomLoader;
-            } else if (widget.insertWidgetAfter != null &&
-                index > 0 &&
-                index % widget.insertWidgetAfter! == 0) {
-              return widget.intermediateWidget;
+            } else {
+              if (widget.insertWidgetEvery != null && index > 0) {
+                if (widget.insertWidgetEvery! == 1) {
+                  if (index % 2 == 0) {
+                    pos = index++;
+                    return widget.intermediateWidget;
+                  }
+                } else if ((index + 1) % widget.insertWidgetEvery! == 0) {
+                  pos = index - (index / widget.insertWidgetEvery!).floor();
+                  return widget.intermediateWidget;
+                }
+              }
             }
-
-            var i = widget.insertWidgetAfter == null
-                ? index
-                : index - (index / widget.insertWidgetAfter!).floor();
 
             return widget.itemBuilder(
               index,
               context,
-              loadedState.documentSnapshots[i],
+              loadedState.documentSnapshots[pos],
             );
           },
           childCount: loadedState.hasReachedEnd
