@@ -107,9 +107,18 @@ class PaginationCubit extends Cubit<PaginationState> {
   }) {
     _lastDocument = newList.isNotEmpty ? newList.last : null;
     emit(PaginationLoaded(
-      documentSnapshots: previousList + newList,
+      documentSnapshots: _mergeSnapshots(previousList, newList),
       hasReachedEnd: newList.isEmpty,
     ));
+  }
+
+  List<QueryDocumentSnapshot> _mergeSnapshots(
+    List<QueryDocumentSnapshot> previousList,
+    List<QueryDocumentSnapshot> newList,
+  ) {
+    final prevIds = previousList.map((prevSnapshot) => prevSnapshot.id).toSet();
+    newList.retainWhere((newSnapshot) => prevIds.add(newSnapshot.id));
+    return previousList + newList;
   }
 
   Query _getQuery() {
