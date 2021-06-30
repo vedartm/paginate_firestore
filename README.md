@@ -1,7 +1,9 @@
 # Pagination in Firestore
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-8-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![pub package](https://img.shields.io/pub/v/paginate_firestore.svg)](https://pub.dev/packages/paginate_firestore)
@@ -60,7 +62,7 @@ To use with listeners:
 
       RefreshIndicator(
         child: PaginateFirestore(
-          itemBuilder: (context, documentSnapshot) => ListTile(
+          itemBuilder: (index, context, documentSnapshot) => ListTile(
             leading: CircleAvatar(child: Icon(Icons.person)),
             title: Text(documentSnapshot.data()['name']),
             subtitle: Text(documentSnapshot.documentID),
@@ -81,7 +83,7 @@ To use with listeners:
 
 Feel free to contribute to this project.
 
-If you find a bug or want a feature, but don't know how to fix/implement it, please fill an [issue](https://github.com/excogitatr/paginate_firestore/issues).  
+If you find a bug or want a feature, but don't know how to fix/implement it, please fill an [issue](https://github.com/excogitatr/paginate_firestore/issues).
 If you fixed a bug or implemented a feature, please send a [pull request](https://github.com/excogitatr/paginate_firestore/pulls).
 
 ## Getting Started
@@ -113,7 +115,7 @@ Thanks goes to these wonderful people:
     <td align="center"><a href="https://github.com/jslattery26"><img src="https://avatars.githubusercontent.com/u/44002583?v=4?s=100" width="100px;" alt=""/><br /><sub><b>jslattery26</b></sub></a><br /><a href="https://github.com/vedartm/paginate_firestore/commits?author=jslattery26" title="Code">💻</a></td>
   </tr>
   <tr>
-    <td align="center"><a href="http://approachablegeek.com"><img src="https://avatars.githubusercontent.com/u/68708352?v=4?s=100" width="100px;" alt=""/><br /><sub><b>garrettApproachableGeek</b></sub></a><br /><a href="https://github.com/vedartm/paginate_firestore/commits?author=garrettApproachableGeek" title="Code">💻</a></td>
+    <td align="center"><a href="https://approachablegeek.com"><img src="https://avatars.githubusercontent.com/u/68708352?v=4?s=100" width="100px;" alt=""/><br /><sub><b>garrettApproachableGeek</b></sub></a><br /><a href="https://github.com/vedartm/paginate_firestore/commits?author=garrettApproachableGeek" title="Code">💻</a></td>
   </tr>
 </table>
 

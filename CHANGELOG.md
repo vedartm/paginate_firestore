@@ -1,3 +1,7 @@
+## 1.0.1+1
+
+- Fixes duplication of document snapshot
+
 ## 1.0.1
 
 - New feature - Paginated page view. To use this, set the type as `itemBuilderType: PaginateBuilderType.pageView`
