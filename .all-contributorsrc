@@ -67,11 +67,20 @@
       "contributions": [
         "code"
       ]
+    },
+    {
+      "login": "garrettApproachableGeek",
+      "name": "garrettApproachableGeek",
+      "avatar_url": "https://avatars.githubusercontent.com/u/68708352?v=4",
+      "profile": "http://approachablegeek.com",
+      "contributions": [
+        "code"
+      ]
     }
   ],
   "contributorsPerLine": 7,
   "projectName": "paginate_firestore",
-  "projectOwner": "excogitatr",
+  "projectOwner": "vedartm",
   "repoType": "github",
   "repoHost": "https://github.com",
   "skipCi": true
