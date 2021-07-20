@@ -6,13 +6,16 @@ version: 1.0.0+1
 environment:
   sdk: ">=2.12.0 <3.0.0"
 
+dependency_overrides:
+  paginate_firestore:
+    path: ../
+
 dependencies:
   flutter:
     sdk: flutter
 
   firebase_core: ^1.2.1
-  paginate_firestore:
-    path: ../
+  paginate_firestore: ^1.0.1+1
 
 dev_dependencies:
   flutter_test:

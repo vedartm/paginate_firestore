@@ -1,3 +1,9 @@
+## 1.0.2
+
+- Fixes refresh on emptyDisplay
+- Adds `allowImplicitScrolling` in pageview
+- Updates `cloud_firestore` to v2.4.0
+
 ## 1.0.1+1
 
 - Fixes duplication of document snapshot
