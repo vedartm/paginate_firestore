@@ -94,9 +94,15 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
         if (state is PaginationInitial) {
           return widget.initialLoader;
         } else if (state is PaginationError) {
-          return (widget.onError != null)
-              ? widget.onError!(state.error)
-              : ErrorDisplay(exception: state.error);
+          return SingleChildScrollView(
+            physics: AlwaysScrollableScrollPhysics(),
+            child: Container(
+              child: (widget.onError != null)
+                  ? widget.onError!(state.error)
+                  : ErrorDisplay(exception: state.error),
+              height: MediaQuery.of(context).size.height,
+            ),
+          );
         } else {
           final loadedState = state as PaginationLoaded;
           if (widget.onLoaded != null) {
@@ -107,7 +113,13 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
           }
 
           if (loadedState.documentSnapshots.isEmpty) {
-            return widget.emptyDisplay;
+            return SingleChildScrollView(
+              physics: AlwaysScrollableScrollPhysics(),
+              child: Container(
+                child: widget.emptyDisplay,
+                height: MediaQuery.of(context).size.height,
+              ),
+            );
           }
           return widget.itemBuilderType == PaginateBuilderType.listView
               ? _buildListView(loadedState)
