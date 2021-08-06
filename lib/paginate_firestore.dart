@@ -43,6 +43,7 @@ class PaginateFirestore extends StatefulWidget {
     this.pageController,
     this.onPageChanged,
     this.header,
+    this.headerBuilder,
     this.footer,
     this.isLive = false,
   }) : super(key: key);
@@ -75,6 +76,8 @@ class PaginateFirestore extends StatefulWidget {
   final Widget Function(Exception)? onError;
 
   final Widget Function(int, BuildContext, DocumentSnapshot) itemBuilder;
+  final Widget Function(BuildContext, List<DocumentSnapshot> documentSnapshots)?
+      headerBuilder;
 
   final void Function(PaginationLoaded)? onReachedEnd;
 
@@ -222,6 +225,22 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
       physics: widget.physics,
       slivers: [
         if (widget.header != null) widget.header!,
+        if (widget.headerBuilder != null)
+          SliverList(
+            delegate: SliverChildListDelegate(
+              [widget.headerBuilder!(context, loadedState.documentSnapshots)],
+            ),
+          ),
+        SliverPadding(
+          padding: widget.padding,
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                return;
+              },
+            ),
+          ),
+        ),
         SliverPadding(
           padding: widget.padding,
           sliver: SliverList(
