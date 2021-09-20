@@ -77,6 +77,7 @@ class PaginationCubit extends Cubit<PaginationState> {
         );
       }
     } on PlatformException catch (exception) {
+      // ignore: avoid_print
       print(exception);
       rethrow;
     }

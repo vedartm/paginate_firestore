@@ -95,8 +95,8 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
           return widget.initialLoader;
         } else if (state is PaginationError) {
           return SingleChildScrollView(
-            physics: AlwaysScrollableScrollPhysics(),
-            child: Container(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: SizedBox(
               child: (widget.onError != null)
                   ? widget.onError!(state.error)
                   : ErrorDisplay(exception: state.error),
@@ -114,8 +114,8 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
 
           if (loadedState.documentSnapshots.isEmpty) {
             return SingleChildScrollView(
-              physics: AlwaysScrollableScrollPhysics(),
-              child: Container(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: SizedBox(
                 child: widget.emptyDisplay,
                 height: MediaQuery.of(context).size.height,
               ),

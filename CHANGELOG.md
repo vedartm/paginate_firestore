@@ -1,3 +1,11 @@
+## 1.0.3
+
+- Use the new `flutter_lints` package and apply changes
+- Updates `cloud_firestore` to v2.5.3
+- Updates `provider` to v6.0.0
+- Updates `bloc` to v7.1.0
+- Updates `flutter_bloc` to v7.2.0
+
 ## 1.0.2
 
 - Fixes refresh on emptyDisplay

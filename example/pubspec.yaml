@@ -1,23 +1,22 @@
 name: example
 description: A new Flutter project.
+publish_to: "none"
 
 version: 1.0.0+1
 
 environment:
   sdk: ">=2.12.0 <3.0.0"
 
-dependency_overrides:
-  paginate_firestore:
-    path: ../
-
 dependencies:
   flutter:
     sdk: flutter
-
   firebase_core: ^1.2.1
-  paginate_firestore: ^1.0.1+1
+  paginate_firestore: 
+    path: ../
+
 
 dev_dependencies:
+  flutter_lints: ^1.0.4
   flutter_test:
     sdk: flutter
 

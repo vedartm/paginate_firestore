@@ -10,10 +10,10 @@ class PaginationError extends PaginationState {
   PaginationError({required this.error});
 
   @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
 
-    return o is PaginationError && o.error == error;
+    return other is PaginationError && other.error == error;
   }
 
   @override
@@ -40,12 +40,12 @@ class PaginationLoaded extends PaginationState {
   }
 
   @override
-  bool operator ==(Object o) {
-    if (identical(this, o)) return true;
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
 
-    return o is PaginationLoaded &&
-        o.hasReachedEnd == hasReachedEnd &&
-        listEquals(o.documentSnapshots, documentSnapshots);
+    return other is PaginationLoaded &&
+        other.hasReachedEnd == hasReachedEnd &&
+        listEquals(other.documentSnapshots, documentSnapshots);
   }
 
   @override
