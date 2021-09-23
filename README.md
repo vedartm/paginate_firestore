@@ -1,7 +1,7 @@
 # Pagination in Firestore
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-9-orange.svg?style=flat-square)](#contributors-)
+[![All Contributors](https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square)](#contributors-)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![pub package](https://img.shields.io/pub/v/paginate_firestore.svg)](https://pub.dev/packages/paginate_firestore)
@@ -115,6 +115,7 @@ Thanks goes to these wonderful people:
   <tr>
     <td align="center"><a href="https://approachablegeek.com"><img src="https://avatars.githubusercontent.com/u/68708352?v=4?s=100" width="100px;" alt=""/><br /><sub><b>garrettApproachableGeek</b></sub></a><br /><a href="https://github.com/vedartm/paginate_firestore/commits?author=garrettApproachableGeek" title="Code">💻</a></td>
     <td align="center"><a href="https://www.suamusica.com.br/"><img src="https://avatars.githubusercontent.com/u/30954979?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Sua Música</b></sub></a><br /><a href="https://github.com/vedartm/paginate_firestore/commits?author=SuaMusica" title="Code">💻</a></td>
+    <td align="center"><a href="https://nelsonnerds.wordpress.com/"><img src="https://avatars.githubusercontent.com/u/1161152?v=4?s=100" width="100px;" alt=""/><br /><sub><b>Austin Nelson</b></sub></a><br /><a href="https://github.com/vedartm/paginate_firestore/commits?author=austinn" title="Code">💻</a></td>
   </tr>
 </table>
 
