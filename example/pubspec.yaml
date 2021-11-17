@@ -10,10 +10,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: ^1.2.1
-  paginate_firestore: 
+  firebase_core: ^1.10.0
+  paginate_firestore:
     path: ../
-
 
 dev_dependencies:
   flutter_lints: ^1.0.4
