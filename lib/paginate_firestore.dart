@@ -28,7 +28,7 @@ class PaginateFirestore extends StatefulWidget {
     this.onError,
     this.onReachedEnd,
     this.onLoaded,
-    this.emptyDisplay = const EmptyDisplay(),
+    this.onEmpty = const EmptyDisplay(),
     this.separator = const EmptySeparator(),
     this.initialLoader = const InitialLoader(),
     this.bottomLoader = const BottomLoader(),
@@ -50,7 +50,7 @@ class PaginateFirestore extends StatefulWidget {
   }) : super(key: key);
 
   final Widget bottomLoader;
-  final Widget emptyDisplay;
+  final Widget onEmpty;
   final SliverGridDelegate gridDelegate;
   final Widget initialLoader;
   final PaginateBuilderType itemBuilderType;
@@ -102,15 +102,9 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
         if (state is PaginationInitial) {
           return widget.initialLoader;
         } else if (state is PaginationError) {
-          return SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: SizedBox(
-              child: (widget.onError != null)
-                  ? widget.onError!(state.error)
-                  : ErrorDisplay(exception: state.error),
-              height: MediaQuery.of(context).size.height,
-            ),
-          );
+          return (widget.onError != null)
+              ? widget.onError!(state.error)
+              : ErrorDisplay(exception: state.error);
         } else {
           final loadedState = state as PaginationLoaded;
           if (widget.onLoaded != null) {
@@ -121,13 +115,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
           }
 
           if (loadedState.documentSnapshots.isEmpty) {
-            return SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: SizedBox(
-                child: widget.emptyDisplay,
-                height: MediaQuery.of(context).size.height,
-              ),
-            );
+            return widget.onEmpty;
           }
           return widget.itemBuilderType == PaginateBuilderType.listView
               ? _buildListView(loadedState)
