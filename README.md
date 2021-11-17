@@ -1,7 +1,9 @@
 # Pagination in Firestore
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+
 [![All Contributors](https://img.shields.io/badge/all_contributors-10-orange.svg?style=flat-square)](#contributors-)
+
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 [![pub package](https://img.shields.io/pub/v/paginate_firestore.svg)](https://pub.dev/packages/paginate_firestore)
@@ -36,12 +38,12 @@ Implement it
 ```dart
       PaginateFirestore(
         //item builder type is compulsory.
-        itemBuilder: (index, context, documentSnapshot) {
-          final data = documentSnapshot.data() as Map?;
+        itemBuilder: (context, documentSnapshots, index) {
+          final data = documentSnapshots[index].data() as Map?;
           return ListTile(
             leading: CircleAvatar(child: Icon(Icons.person)),
             title: data == null ? Text('Error in data') : Text(data['name']),
-            subtitle: Text(documentSnapshot.id),
+            subtitle: Text(documentSnapshots[index].id),
           );
         },
         // orderBy is compulsory to enable pagination
@@ -60,10 +62,10 @@ To use with listeners:
 
       RefreshIndicator(
         child: PaginateFirestore(
-          itemBuilder: (index, context, documentSnapshot) => ListTile(
+          itemBuilder: (context, documentSnapshots, index) => ListTile(
             leading: CircleAvatar(child: Icon(Icons.person)),
-            title: Text(documentSnapshot.data()['name']),
-            subtitle: Text(documentSnapshot.documentID),
+            title: Text(documentSnapshots[index].data()['name']),
+            subtitle: Text(documentSnapshots[index].id),
           ),
           // orderBy is compulsary to enable pagination
           query: Firestore.instance.collection('users').orderBy('name'),

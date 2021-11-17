@@ -1,10 +1,19 @@
 ## 1.0.3
 
+### Breaking changes
+
+- Changes `emptyDisplay` to `onEmpty`
+- `itemBuilder` type changes to `Function(BuildContext, List<DocumentSnapshot>, int)`
+
+### Other changes
+
+- Adds `allowImplicitScrolling` for snaphots and `options` for get
+- Removes scroll from `onEmpty` and `onError`
 - Use the new `flutter_lints` package and apply changes
-- Updates `cloud_firestore` to v2.5.3
-- Updates `provider` to v6.0.0
-- Updates `bloc` to v7.1.0
-- Updates `flutter_bloc` to v7.2.0
+- Updates `cloud_firestore` to v3.1.0
+- Updates `provider` to v6.0.1
+- Updates `bloc` to v7.2.1
+- Updates `flutter_bloc` to v7.3.3
 
 ## 1.0.2
 
