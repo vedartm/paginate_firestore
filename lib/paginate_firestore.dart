@@ -45,6 +45,8 @@ class PaginateFirestore extends StatefulWidget {
     this.header,
     this.footer,
     this.isLive = false,
+    this.includeMetadataChanges = false,
+    this.options,
   }) : super(key: key);
 
   final Widget bottomLoader;
@@ -69,12 +71,18 @@ class PaginateFirestore extends StatefulWidget {
   final Widget? header;
   final Widget? footer;
 
+  /// Use this only if `isLive = false`
+  final GetOptions? options;
+
+  /// Use this only if `isLive = true`
+  final bool includeMetadataChanges;
+
   @override
   _PaginateFirestoreState createState() => _PaginateFirestoreState();
 
   final Widget Function(Exception)? onError;
 
-  final Widget Function(int, BuildContext, DocumentSnapshot) itemBuilder;
+  final Widget Function(BuildContext, List<DocumentSnapshot>, int) itemBuilder;
 
   final void Function(PaginationLoaded)? onReachedEnd;
 
@@ -187,7 +195,10 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
                   return widget.bottomLoader;
                 }
                 return widget.itemBuilder(
-                    index, context, loadedState.documentSnapshots[index]);
+                  context,
+                  loadedState.documentSnapshots,
+                  index,
+                );
               },
               childCount: loadedState.hasReachedEnd
                   ? loadedState.documentSnapshots.length
@@ -233,8 +244,11 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
                     _cubit!.fetchPaginatedList();
                     return widget.bottomLoader;
                   }
-                  return widget.itemBuilder(itemIndex, context,
-                      loadedState.documentSnapshots[itemIndex]);
+                  return widget.itemBuilder(
+                    context,
+                    loadedState.documentSnapshots,
+                    itemIndex,
+                  );
                 }
                 return widget.separator;
               },
@@ -290,7 +304,10 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
               return widget.bottomLoader;
             }
             return widget.itemBuilder(
-                index, context, loadedState.documentSnapshots[index]);
+              context,
+              loadedState.documentSnapshots,
+              index,
+            );
           },
           childCount: loadedState.hasReachedEnd
               ? loadedState.documentSnapshots.length

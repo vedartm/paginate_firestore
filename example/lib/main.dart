@@ -42,13 +42,13 @@ class HomePage extends StatelessWidget {
         // item builder type is compulsory.
         itemBuilderType:
             PaginateBuilderType.listView, //Change types accordingly
-        itemBuilder: (index, context, documentSnapshot) {
-          final data = documentSnapshot.data() as Map?;
+        itemBuilder: (context, documentSnapshots, index) {
+          final data = documentSnapshots[index].data() as Map?;
           return ListTile(
             leading: const CircleAvatar(child: Icon(Icons.person)),
             title:
                 data == null ? const Text('Error in data') : Text(data['name']),
-            subtitle: Text(documentSnapshot.id),
+            subtitle: Text(documentSnapshots[index].id),
           );
         },
         // orderBy is compulsory to enable pagination
