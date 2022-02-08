@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:paginate_firestore/utils/internationalization.dart';
 
 class EmptyDisplay extends StatelessWidget {
-  const EmptyDisplay({Key? key}) : super(key: key);
+  const EmptyDisplay({Key? key, this.internationalizationHelper})
+      : super(key: key);
+  final InternationalizationHelper? internationalizationHelper;
 
   @override
   Widget build(BuildContext context) {
-    return const Center(child: Text('No documents found'));
+    String noDocumentsFound = internationalizationHelper != null
+        ? internationalizationHelper!.noDocumentsFound
+        : InternationalizationHelper.noDocumentsFoundEnglish;
+    return Center(child: Text(noDocumentsFound));
   }
 }
