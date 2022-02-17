@@ -94,11 +94,12 @@ class PaginationCubit extends Cubit<PaginationState> {
     if (state is PaginationInitial) {
       refreshPaginatedList();
     } else if (state is PaginationLoaded) {
-      final loadedState = state as PaginationLoaded;
+      PaginationLoaded loadedState = state as PaginationLoaded;
       if (loadedState.hasReachedEnd) return;
       final listener = localQuery
           .snapshots(includeMetadataChanges: includeMetadataChanges)
           .listen((querySnapshot) {
+        loadedState = state as PaginationLoaded;
         _emitPaginatedState(
           querySnapshot.docs,
           previousList:
