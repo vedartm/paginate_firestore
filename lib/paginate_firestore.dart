@@ -40,6 +40,7 @@ class PaginateFirestore extends StatefulWidget {
     this.listeners,
     this.scrollController,
     this.allowImplicitScrolling = false,
+    this.keyboardDismissBehavior = ScrollViewKeyboardDismissBehavior.manual,
     this.pageController,
     this.onPageChanged,
     this.header,
@@ -61,6 +62,7 @@ class PaginateFirestore extends StatefulWidget {
   final Query query;
   final bool reverse;
   final bool allowImplicitScrolling;
+  final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
   final ScrollController? scrollController;
   final PageController? pageController;
   final Axis scrollDirection;
@@ -170,6 +172,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
       shrinkWrap: widget.shrinkWrap,
       scrollDirection: widget.scrollDirection,
       physics: widget.physics,
+      keyboardDismissBehavior: widget.keyboardDismissBehavior,
       slivers: [
         if (widget.header != null) widget.header!,
         SliverPadding(
@@ -219,6 +222,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
       shrinkWrap: widget.shrinkWrap,
       scrollDirection: widget.scrollDirection,
       physics: widget.physics,
+      keyboardDismissBehavior: widget.keyboardDismissBehavior,
       slivers: [
         if (widget.header != null) widget.header!,
         SliverPadding(
