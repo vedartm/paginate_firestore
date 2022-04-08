@@ -35,26 +35,31 @@ class HomePage extends StatelessWidget {
         title: const Text('Firestore pagination example'),
         centerTitle: true,
       ),
-      body: PaginateFirestore(
-        // Use SliverAppBar in header to make it sticky
-        header: const SliverToBoxAdapter(child: Text('HEADER')),
-        footer: const SliverToBoxAdapter(child: Text('FOOTER')),
-        // item builder type is compulsory.
-        itemBuilderType:
-            PaginateBuilderType.listView, //Change types accordingly
-        itemBuilder: (context, documentSnapshots, index) {
-          final data = documentSnapshots[index].data() as Map?;
-          return ListTile(
-            leading: const CircleAvatar(child: Icon(Icons.person)),
-            title:
-                data == null ? const Text('Error in data') : Text(data['name']),
-            subtitle: Text(documentSnapshots[index].id),
-          );
-        },
-        // orderBy is compulsory to enable pagination
-        query: FirebaseFirestore.instance.collection('users').orderBy('name'),
-        // to fetch real-time data
-        isLive: true,
+      body: Scrollbar(
+        isAlwaysShown: true,
+        child: PaginateFirestore(
+          // Use SliverAppBar in header to make it sticky
+          header: const SliverToBoxAdapter(child: Text('HEADER')),
+          footer: const SliverToBoxAdapter(child: Text('FOOTER')),
+          // item builder type is compulsory.
+          itemBuilderType:
+              PaginateBuilderType.listView, //Change types accordingly
+          itemBuilder: (context, documentSnapshots, index) {
+            final data = documentSnapshots[index].data() as Map?;
+            return ListTile(
+              leading: const CircleAvatar(child: Icon(Icons.person)),
+              title: data == null
+                  ? const Text('Error in data')
+                  : Text(data['name']),
+              subtitle: Text(documentSnapshots[index].id),
+            );
+          },
+          // orderBy is compulsory to enable pagination
+          query: FirebaseFirestore.instance.collection('users').orderBy('name'),
+          itemsPerPage: 5,
+          // to fetch real-time data
+          isLive: true,
+        ),
       ),
     );
   }
