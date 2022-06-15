@@ -173,6 +173,8 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
       widget.itemsPerPage,
       widget.startAfterDocument,
       isLive: widget.isLive,
+      includeMetadataChanges: widget.includeMetadataChanges,
+      options: widget.options,
     )..fetchPaginatedList();
     super.initState();
   }
