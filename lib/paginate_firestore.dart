@@ -135,7 +135,10 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
     return SingleChildScrollView(
       child: Container(
         alignment: Alignment.center,
-        height: MediaQuery.of(context).size.height,
+        height: MediaQuery.of(context).size.height -
+            kToolbarHeight -
+            kTextTabBarHeight -
+            kBottomNavigationBarHeight,
         child: child,
       ),
     );
