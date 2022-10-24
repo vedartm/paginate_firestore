@@ -12,7 +12,7 @@ dependencies:
     sdk: flutter
   bloc: ^8.0.3
   flutter_bloc: ^8.0.1
-  cloud_firestore: ^3.1.11
+  cloud_firestore: ^4.0.2
   provider: ^6.0.2
 
 dev_dependencies:
