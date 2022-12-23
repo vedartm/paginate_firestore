@@ -19,11 +19,11 @@ class PaginateFirestore extends StatefulWidget {
   const PaginateFirestore({
     Key? key,
     required this.itemBuilder,
-    required this.query,
+    required this.queries,
     required this.itemBuilderType,
     this.gridDelegate =
         const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-    this.startAfterDocument,
+    this.startAfterDocumentByQuery,
     this.itemsPerPage = 15,
     this.onError,
     this.onReachedEnd,
@@ -59,7 +59,7 @@ class PaginateFirestore extends StatefulWidget {
   final List<ChangeNotifier>? listeners;
   final EdgeInsets padding;
   final ScrollPhysics? physics;
-  final Query query;
+  final List<Query> queries;
   final bool reverse;
   final bool allowImplicitScrolling;
   final ScrollViewKeyboardDismissBehavior keyboardDismissBehavior;
@@ -69,7 +69,7 @@ class PaginateFirestore extends StatefulWidget {
   final Widget separator;
   final bool shrinkWrap;
   final bool isLive;
-  final DocumentSnapshot? startAfterDocument;
+  final Map<Query, DocumentSnapshot?>? startAfterDocumentByQuery;
   final Widget? header;
   final Widget? footer;
 
@@ -131,15 +131,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
     );
   }
 
-  Widget _buildWithScrollView(BuildContext context, Widget child) {
-    return SingleChildScrollView(
-      child: Container(
-        alignment: Alignment.center,
-        height: MediaQuery.of(context).size.height,
-        child: child,
-      ),
-    );
-  }
+  Widget _buildWithScrollView(BuildContext context, Widget child) => child;
 
   @override
   void dispose() {
@@ -169,9 +161,9 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
     }
 
     _cubit = PaginationCubit(
-      widget.query,
+      widget.queries,
       widget.itemsPerPage,
-      widget.startAfterDocument,
+      widget.startAfterDocumentByQuery,
       isLive: widget.isLive,
     )..fetchPaginatedList();
     super.initState();

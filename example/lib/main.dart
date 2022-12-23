@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
       ),
       body: Scrollbar(
-        isAlwaysShown: true,
+        thumbVisibility: true,
         child: PaginateFirestore(
           // Use SliverAppBar in header to make it sticky
           header: const SliverToBoxAdapter(child: Text('HEADER')),
@@ -55,7 +55,9 @@ class HomePage extends StatelessWidget {
             );
           },
           // orderBy is compulsory to enable pagination
-          query: FirebaseFirestore.instance.collection('users').orderBy('name'),
+          queries: [
+            FirebaseFirestore.instance.collection('users').orderBy('name')
+          ],
           itemsPerPage: 5,
           // to fetch real-time data
           isLive: true,
