@@ -12,8 +12,8 @@ dependencies:
     sdk: flutter
   bloc: ^8.0.3
   flutter_bloc: ^8.0.1
-  cloud_firestore: ^3.1.11
-  provider: ^6.0.2
+  cloud_firestore: ^4.3.1
+  provider: ^6.0.4
 
 dev_dependencies:
   flutter_lints: ^1.0.4
