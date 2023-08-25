@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:paginate_firestore/widgets/refresh_indicator.dart';
 import 'package:provider/provider.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'bloc/pagination_cubit.dart';
 import 'bloc/pagination_listeners.dart';
@@ -51,8 +50,7 @@ class PaginateFirestore extends StatefulWidget {
     this.isLive = false,
     this.includeMetadataChanges = false,
     this.options,
-    this.refreshController,
-    this.onRefresh
+    this.customRefresher,
   }) : super(key: key);
 
   final Widget bottomLoader;
@@ -87,7 +85,7 @@ class PaginateFirestore extends StatefulWidget {
   /// make sure you pass `RefreshController` and `ScrollController` also handle
   /// onRefresh callback.
   final bool? hasRefreshIndicator;
-  final RefreshController? refreshController;
+  final CustomRefresher? customRefresher;
 
 
   @override
@@ -102,8 +100,6 @@ class PaginateFirestore extends StatefulWidget {
   final void Function(PaginationLoaded)? onLoaded;
 
   final void Function(int)? onPageChanged;
-
-  final Future<void> Function()? onRefresh;
 }
 
 class _PaginateFirestoreState extends State<PaginateFirestore> {
@@ -157,7 +153,6 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
   @override
   void dispose() {
     widget.scrollController?.dispose();
-    widget.refreshController?.dispose();
     _cubit?.dispose();
     super.dispose();
   }
@@ -231,8 +226,8 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
     if (widget.listeners != null && widget.listeners!.isNotEmpty) {
       return MultiProvider(
         providers: widget.listeners!
-            .map((_listener) => ChangeNotifierProvider(
-                  create: (context) => _listener,
+            .map((listener) => ChangeNotifierProvider(
+                  create: (context) => listener,
                 ))
             .toList(),
         child: gridView,
@@ -241,11 +236,8 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
 
     if(widget.hasRefreshIndicator == true) {
       return RefreshIndicatorWidget(
-        scrollController: widget.scrollController,
-        refreshController: widget.refreshController,
-        onRefresh: widget.onRefresh!,
+        customRefresher: widget.customRefresher!,
         child: gridView,
-
       );
     }
 
@@ -305,8 +297,8 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
     if (widget.listeners != null && widget.listeners!.isNotEmpty) {
       return MultiProvider(
         providers: widget.listeners!
-            .map((_listener) => ChangeNotifierProvider(
-                  create: (context) => _listener,
+            .map((listener) => ChangeNotifierProvider(
+                  create: (context) => listener,
                 ))
             .toList(),
         child: listView,
@@ -315,11 +307,8 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
 
     if(widget.hasRefreshIndicator == true) {
       return RefreshIndicatorWidget(
-          scrollController: widget.scrollController,
-          refreshController: widget.refreshController,
-          onRefresh: widget.onRefresh!,
-          child: listView,
-
+        customRefresher: widget.customRefresher!,
+        child: listView,
       );
     }
 
@@ -358,8 +347,8 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
     if (widget.listeners != null && widget.listeners!.isNotEmpty) {
       return MultiProvider(
         providers: widget.listeners!
-            .map((_listener) => ChangeNotifierProvider(
-                  create: (context) => _listener,
+            .map((listener) => ChangeNotifierProvider(
+                  create: (context) => listener,
                 ))
             .toList(),
         child: pageView,
@@ -368,14 +357,10 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
 
     if(widget.hasRefreshIndicator == true) {
       return RefreshIndicatorWidget(
-        scrollController: widget.scrollController,
-        refreshController: widget.refreshController,
-        onRefresh: widget.onRefresh!,
+        customRefresher: widget.customRefresher!,
         child: pageView,
-
       );
     }
-
     return pageView;
   }
 }
