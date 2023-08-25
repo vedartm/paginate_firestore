@@ -1,7 +1,8 @@
 ## 1.0.4
 
-- Updates dependencies
-- Custom pull refresh added
+- Dependencies updated
+- Dynamic bottom loader
+- Custom pull to refresh added
 
 ## 1.0.3+1
 

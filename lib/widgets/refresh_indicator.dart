@@ -4,11 +4,10 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 class RefreshIndicatorWidget extends StatefulWidget {
   final CustomRefresher customRefresher;
   final ScrollController scrollController;
-  final RefreshController refreshController;
   final Widget child;
 
   const RefreshIndicatorWidget(
-      {Key? key, required this.customRefresher, required this.child, required this.scrollController, required this.refreshController,}) : super(key: key);
+      {Key? key, required this.customRefresher, required this.child, required this.scrollController,}) : super(key: key);
 
   @override
   State<RefreshIndicatorWidget> createState() => _RefreshIndicatorWidgetState();
@@ -23,17 +22,16 @@ class _RefreshIndicatorWidgetState extends State<RefreshIndicatorWidget> {
       },
       child: SmartRefresher(
         footer: widget.customRefresher.footer,
-        enablePullUp: false,
-        enablePullDown: true,
+        enablePullUp: widget.customRefresher.enablePullUp ?? true,
+        enablePullDown: widget.customRefresher.enablePullDown ?? false,
         physics: widget.customRefresher.physics ?? const ScrollPhysics(),
-        enableTwoLevel: true,
-        header: widget.customRefresher.header ??
-            const WaterDropHeader(
-              waterDropColor: Colors.transparent,
-              idleIcon: SizedBox(
-                  width: 30, height: 30, child: CircularProgressIndicator()),
-            ),
-        controller: widget.refreshController,
+        enableTwoLevel: widget.customRefresher.enablePullUp ?? false,
+        header: widget.customRefresher.header ?? const WaterDropHeader(
+          waterDropColor: Colors.transparent,
+          idleIcon: SizedBox(
+              width: 30, height: 30, child: CircularProgressIndicator()),
+        ),
+        controller: widget.customRefresher.refreshController!,
         scrollController: widget.scrollController,
         onRefresh: widget.customRefresher.onRefresh,
         child: widget.child,
@@ -43,21 +41,23 @@ class _RefreshIndicatorWidgetState extends State<RefreshIndicatorWidget> {
 }
 
 class CustomRefresher {
-  final Future<void> Function() onRefresh;
+  final Future<void> Function()? onRefresh;
   final ScrollPhysics? physics;
   final bool? enablePullUp;
   final bool? enablePullDown;
   final bool? enableTwoLevel;
   final Widget? header;
   final Widget? footer;
+  final RefreshController? refreshController;
 
   CustomRefresher({
-    required this.onRefresh,
+    this.onRefresh,
     this.physics,
     this.enablePullUp,
     this.enablePullDown,
     this.enableTwoLevel,
     this.header,
     this.footer,
+    this.refreshController
   });
 }
