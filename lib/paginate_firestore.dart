@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:paginate_firestore/widgets/refresh_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'bloc/pagination_cubit.dart';
 import 'bloc/pagination_listeners.dart';
@@ -105,6 +106,10 @@ class PaginateFirestore extends StatefulWidget {
 class _PaginateFirestoreState extends State<PaginateFirestore> {
   PaginationCubit? _cubit;
 
+  final refreshController = RefreshController(initialRefresh: false);
+
+  CustomRefresher? customRefresher;
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<PaginationCubit, PaginationState>(
@@ -159,6 +164,16 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
 
   @override
   void initState() {
+    customRefresher = CustomRefresher(
+      enablePullDown: widget.customRefresher?.enablePullDown,
+      enablePullUp: widget.customRefresher?.enablePullUp,
+      enableTwoLevel: widget.customRefresher?.enableTwoLevel,
+      footer: widget.customRefresher?.footer,
+      header: widget.customRefresher?.header,
+      onRefresh: widget.customRefresher!.onRefresh,
+      physics: widget.physics
+    );
+
     if (widget.listeners != null) {
       for (var listener in widget.listeners!) {
         if (listener is PaginateRefreshedChangeListener) {
@@ -236,7 +251,9 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
 
     if(widget.hasRefreshIndicator == true) {
       return RefreshIndicatorWidget(
-        customRefresher: widget.customRefresher!,
+        scrollController: widget.scrollController!,
+        refreshController: refreshController,
+        customRefresher: customRefresher!,
         child: gridView,
       );
     }
@@ -307,7 +324,9 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
 
     if(widget.hasRefreshIndicator == true) {
       return RefreshIndicatorWidget(
-        customRefresher: widget.customRefresher!,
+        scrollController: widget.scrollController!,
+        refreshController: refreshController,
+        customRefresher: customRefresher!,
         child: listView,
       );
     }
@@ -357,7 +376,9 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
 
     if(widget.hasRefreshIndicator == true) {
       return RefreshIndicatorWidget(
-        customRefresher: widget.customRefresher!,
+        scrollController: widget.scrollController!,
+        refreshController: refreshController,
+        customRefresher: customRefresher!,
         child: pageView,
       );
     }

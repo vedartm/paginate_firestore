@@ -3,10 +3,12 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class RefreshIndicatorWidget extends StatefulWidget {
   final CustomRefresher customRefresher;
+  final ScrollController scrollController;
+  final RefreshController refreshController;
   final Widget child;
 
   const RefreshIndicatorWidget(
-      {Key? key, required this.customRefresher, required this.child,}) : super(key: key);
+      {Key? key, required this.customRefresher, required this.child, required this.scrollController, required this.refreshController,}) : super(key: key);
 
   @override
   State<RefreshIndicatorWidget> createState() => _RefreshIndicatorWidgetState();
@@ -31,8 +33,8 @@ class _RefreshIndicatorWidgetState extends State<RefreshIndicatorWidget> {
               idleIcon: SizedBox(
                   width: 30, height: 30, child: CircularProgressIndicator()),
             ),
-        controller: widget.customRefresher.refreshController!,
-        scrollController: widget.customRefresher.scrollController,
+        controller: widget.refreshController,
+        scrollController: widget.scrollController,
         onRefresh: widget.customRefresher.onRefresh,
         child: widget.child,
       ),
@@ -41,9 +43,7 @@ class _RefreshIndicatorWidgetState extends State<RefreshIndicatorWidget> {
 }
 
 class CustomRefresher {
-  final Future<void> Function()? onRefresh;
-  final ScrollController? scrollController;
-  final RefreshController? refreshController;
+  final Future<void> Function() onRefresh;
   final ScrollPhysics? physics;
   final bool? enablePullUp;
   final bool? enablePullDown;
@@ -52,9 +52,7 @@ class CustomRefresher {
   final Widget? footer;
 
   CustomRefresher({
-    this.onRefresh,
-    this.scrollController,
-    this.refreshController,
+    required this.onRefresh,
     this.physics,
     this.enablePullUp,
     this.enablePullDown,
