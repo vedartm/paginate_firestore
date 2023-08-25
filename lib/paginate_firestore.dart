@@ -5,7 +5,9 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paginate_firestore/widgets/refresh_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'bloc/pagination_cubit.dart';
 import 'bloc/pagination_listeners.dart';
@@ -45,9 +47,12 @@ class PaginateFirestore extends StatefulWidget {
     this.onPageChanged,
     this.header,
     this.footer,
+    this.hasRefreshIndicator,
     this.isLive = false,
     this.includeMetadataChanges = false,
     this.options,
+    this.refreshController,
+    this.onRefresh
   }) : super(key: key);
 
   final Widget bottomLoader;
@@ -72,12 +77,18 @@ class PaginateFirestore extends StatefulWidget {
   final DocumentSnapshot? startAfterDocument;
   final Widget? header;
   final Widget? footer;
-
   /// Use this only if `isLive = false`
   final GetOptions? options;
 
   /// Use this only if `isLive = true`
   final bool includeMetadataChanges;
+
+  /// Use this for adding `refreshIndicator` to `ListView` or `GridView`, and
+  /// make sure you pass `RefreshController` and `ScrollController` also handle
+  /// onRefresh callback.
+  final bool? hasRefreshIndicator;
+  final RefreshController? refreshController;
+
 
   @override
   _PaginateFirestoreState createState() => _PaginateFirestoreState();
@@ -91,6 +102,8 @@ class PaginateFirestore extends StatefulWidget {
   final void Function(PaginationLoaded)? onLoaded;
 
   final void Function(int)? onPageChanged;
+
+  final Future<void> Function()? onRefresh;
 }
 
 class _PaginateFirestoreState extends State<PaginateFirestore> {
@@ -144,6 +157,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
   @override
   void dispose() {
     widget.scrollController?.dispose();
+    widget.refreshController?.dispose();
     _cubit?.dispose();
     super.dispose();
   }
@@ -179,6 +193,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
 
   Widget _buildGridView(PaginationLoaded loadedState) {
     var gridView = CustomScrollView(
+
       reverse: widget.reverse,
       controller: widget.scrollController,
       shrinkWrap: widget.shrinkWrap,
@@ -221,6 +236,16 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
                 ))
             .toList(),
         child: gridView,
+      );
+    }
+
+    if(widget.hasRefreshIndicator == true) {
+      return RefreshIndicatorWidget(
+        scrollController: widget.scrollController,
+        refreshController: widget.refreshController,
+        onRefresh: widget.onRefresh!,
+        child: gridView,
+
       );
     }
 
@@ -288,6 +313,16 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
       );
     }
 
+    if(widget.hasRefreshIndicator == true) {
+      return RefreshIndicatorWidget(
+          scrollController: widget.scrollController,
+          refreshController: widget.refreshController,
+          onRefresh: widget.onRefresh!,
+          child: listView,
+
+      );
+    }
+
     return listView;
   }
 
@@ -328,6 +363,16 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
                 ))
             .toList(),
         child: pageView,
+      );
+    }
+
+    if(widget.hasRefreshIndicator == true) {
+      return RefreshIndicatorWidget(
+        scrollController: widget.scrollController,
+        refreshController: widget.refreshController,
+        onRefresh: widget.onRefresh!,
+        child: pageView,
+
       );
     }
 
