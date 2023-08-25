@@ -252,7 +252,6 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
 
     if(widget.hasRefreshIndicator == true) {
       return RefreshIndicatorWidget(
-        scrollController: widget.scrollController!,
         customRefresher: customRefresher!,
         child: gridView,
       );
@@ -324,7 +323,6 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
 
     if(widget.hasRefreshIndicator == true) {
       return RefreshIndicatorWidget(
-        scrollController: widget.scrollController!,
         customRefresher: customRefresher!,
         child: listView,
       );
@@ -375,7 +373,6 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
 
     if(widget.hasRefreshIndicator == true) {
       return RefreshIndicatorWidget(
-        scrollController: widget.scrollController!,
         customRefresher: customRefresher!,
         child: pageView,
       );

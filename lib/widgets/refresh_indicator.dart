@@ -3,11 +3,10 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class RefreshIndicatorWidget extends StatefulWidget {
   final CustomRefresher customRefresher;
-  final ScrollController scrollController;
   final Widget child;
 
   const RefreshIndicatorWidget(
-      {Key? key, required this.customRefresher, required this.child, required this.scrollController,}) : super(key: key);
+      {Key? key, required this.customRefresher, required this.child,}) : super(key: key);
 
   @override
   State<RefreshIndicatorWidget> createState() => _RefreshIndicatorWidgetState();
@@ -32,7 +31,6 @@ class _RefreshIndicatorWidgetState extends State<RefreshIndicatorWidget> {
               width: 30, height: 30, child: CircularProgressIndicator()),
         ),
         controller: widget.customRefresher.refreshController!,
-        scrollController: widget.scrollController,
         onRefresh: widget.customRefresher.onRefresh,
         child: widget.child,
       ),
