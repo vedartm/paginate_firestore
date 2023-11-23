@@ -132,7 +132,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
   }
 
   Widget _buildWithScrollView(BuildContext context, Widget child) {
-    return SingleChildScrollView(
+    return Container(
       child: Container(
         alignment: Alignment.center,
         height: MediaQuery.of(context).size.height,
