@@ -135,7 +135,6 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
     return Container(
       child: Container(
         alignment: Alignment.center,
-        height: MediaQuery.of(context).size.height,
         child: child,
       ),
     );
