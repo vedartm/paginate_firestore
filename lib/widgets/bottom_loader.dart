@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 
 class BottomLoader extends StatelessWidget {
-  const BottomLoader({Key? key}) : super(key: key);
+  final double? width;
+  final double? height;
+  final Color? indicatorColor;
+  final double? strokeWidth;
+  const BottomLoader({Key? key, this.width=16, this.height=16, this.indicatorColor=Colors.blue, this.strokeWidth=2.0}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: Padding(
-        padding: EdgeInsets.only(top: 16, bottom: 24),
+        padding: const EdgeInsets.only(top: 16, bottom: 24),
         child: SizedBox(
-          height: 16,
-          width: 16,
+          height: height,
+          width: width,
           child: CircularProgressIndicator(
-            strokeWidth: 2,
+            strokeWidth: strokeWidth!,
+            color: indicatorColor,
           ),
         ),
       ),

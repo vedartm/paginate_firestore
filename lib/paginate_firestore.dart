@@ -5,7 +5,9 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:paginate_firestore/widgets/refresh_indicator.dart';
 import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'bloc/pagination_cubit.dart';
 import 'bloc/pagination_listeners.dart';
@@ -22,7 +24,7 @@ class PaginateFirestore extends StatefulWidget {
     required this.query,
     required this.itemBuilderType,
     this.gridDelegate =
-        const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+    const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
     this.startAfterDocument,
     this.itemsPerPage = 15,
     this.onError,
@@ -45,9 +47,11 @@ class PaginateFirestore extends StatefulWidget {
     this.onPageChanged,
     this.header,
     this.footer,
+    this.hasRefreshIndicator,
     this.isLive = false,
     this.includeMetadataChanges = false,
     this.options,
+    this.customRefresher,
   }) : super(key: key);
 
   final Widget bottomLoader;
@@ -72,12 +76,18 @@ class PaginateFirestore extends StatefulWidget {
   final DocumentSnapshot? startAfterDocument;
   final Widget? header;
   final Widget? footer;
-
   /// Use this only if `isLive = false`
   final GetOptions? options;
 
   /// Use this only if `isLive = true`
   final bool includeMetadataChanges;
+
+  /// Use this for adding `refreshIndicator` to `ListView` or `GridView`, and
+  /// make sure you pass `RefreshController` and `ScrollController` also handle
+  /// onRefresh callback.
+  final bool? hasRefreshIndicator;
+  final CustomRefresher? customRefresher;
+
 
   @override
   _PaginateFirestoreState createState() => _PaginateFirestoreState();
@@ -95,6 +105,10 @@ class PaginateFirestore extends StatefulWidget {
 
 class _PaginateFirestoreState extends State<PaginateFirestore> {
   PaginationCubit? _cubit;
+
+  final refreshController = RefreshController(initialRefresh: false);
+
+  CustomRefresher? customRefresher;
 
   @override
   Widget build(BuildContext context) {
@@ -124,8 +138,8 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
           return widget.itemBuilderType == PaginateBuilderType.listView
               ? _buildListView(loadedState)
               : widget.itemBuilderType == PaginateBuilderType.gridView
-                  ? _buildGridView(loadedState)
-                  : _buildPageView(loadedState);
+              ? _buildGridView(loadedState)
+              : _buildPageView(loadedState);
         }
       },
     );
@@ -150,6 +164,17 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
 
   @override
   void initState() {
+    customRefresher = CustomRefresher(
+        enablePullDown: widget.customRefresher?.enablePullDown,
+        enablePullUp: widget.customRefresher?.enablePullUp,
+        enableTwoLevel: widget.customRefresher?.enableTwoLevel,
+        footer: widget.customRefresher?.footer,
+        header: widget.customRefresher?.header,
+        onRefresh: widget.customRefresher?.onRefresh,
+        physics: widget.physics,
+        refreshController: widget.customRefresher?.refreshController ?? refreshController
+    );
+
     if (widget.listeners != null) {
       for (var listener in widget.listeners!) {
         if (listener is PaginateRefreshedChangeListener) {
@@ -179,6 +204,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
 
   Widget _buildGridView(PaginationLoaded loadedState) {
     var gridView = CustomScrollView(
+
       reverse: widget.reverse,
       controller: widget.scrollController,
       shrinkWrap: widget.shrinkWrap,
@@ -192,7 +218,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
           sliver: SliverGrid(
             gridDelegate: widget.gridDelegate,
             delegate: SliverChildBuilderDelegate(
-              (context, index) {
+                  (context, index) {
                 if (index >= loadedState.documentSnapshots.length) {
                   _cubit!.fetchPaginatedList();
                   return widget.bottomLoader;
@@ -216,10 +242,17 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
     if (widget.listeners != null && widget.listeners!.isNotEmpty) {
       return MultiProvider(
         providers: widget.listeners!
-            .map((_listener) => ChangeNotifierProvider(
-                  create: (context) => _listener,
-                ))
+            .map((listener) => ChangeNotifierProvider(
+          create: (context) => listener,
+        ))
             .toList(),
+        child: gridView,
+      );
+    }
+
+    if(widget.hasRefreshIndicator == true) {
+      return RefreshIndicatorWidget(
+        customRefresher: customRefresher!,
         child: gridView,
       );
     }
@@ -241,7 +274,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
           padding: widget.padding,
           sliver: SliverList(
             delegate: SliverChildBuilderDelegate(
-              (context, index) {
+                  (context, index) {
                 final itemIndex = index ~/ 2;
                 if (index.isEven) {
                   if (itemIndex >= loadedState.documentSnapshots.length) {
@@ -266,9 +299,9 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
               childCount: max(
                   0,
                   (loadedState.hasReachedEnd
-                              ? loadedState.documentSnapshots.length
-                              : loadedState.documentSnapshots.length + 1) *
-                          2 -
+                      ? loadedState.documentSnapshots.length
+                      : loadedState.documentSnapshots.length + 1) *
+                      2 -
                       1),
             ),
           ),
@@ -280,10 +313,17 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
     if (widget.listeners != null && widget.listeners!.isNotEmpty) {
       return MultiProvider(
         providers: widget.listeners!
-            .map((_listener) => ChangeNotifierProvider(
-                  create: (context) => _listener,
-                ))
+            .map((listener) => ChangeNotifierProvider(
+          create: (context) => listener,
+        ))
             .toList(),
+        child: listView,
+      );
+    }
+
+    if(widget.hasRefreshIndicator == true) {
+      return RefreshIndicatorWidget(
+        customRefresher: customRefresher!,
         child: listView,
       );
     }
@@ -302,7 +342,7 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
         physics: widget.physics,
         onPageChanged: widget.onPageChanged,
         childrenDelegate: SliverChildBuilderDelegate(
-          (context, index) {
+              (context, index) {
             if (index >= loadedState.documentSnapshots.length) {
               _cubit!.fetchPaginatedList();
               return widget.bottomLoader;
@@ -323,14 +363,20 @@ class _PaginateFirestoreState extends State<PaginateFirestore> {
     if (widget.listeners != null && widget.listeners!.isNotEmpty) {
       return MultiProvider(
         providers: widget.listeners!
-            .map((_listener) => ChangeNotifierProvider(
-                  create: (context) => _listener,
-                ))
+            .map((listener) => ChangeNotifierProvider(
+          create: (context) => listener,
+        ))
             .toList(),
         child: pageView,
       );
     }
 
+    if(widget.hasRefreshIndicator == true) {
+      return RefreshIndicatorWidget(
+        customRefresher: customRefresher!,
+        child: pageView,
+      );
+    }
     return pageView;
   }
 }

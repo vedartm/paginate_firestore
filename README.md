@@ -79,6 +79,48 @@ To use with listeners:
       )
 ```
 
+To use custom refresh indicator:
+
+```dart
+      PaginateFirestore(
+        // To enable custom refresh indicator set `hasRefreshIndicator` to true
+        hasRefreshIndicator: true,
+        // configure your custom RefreshIndicator
+        customRefresher: CustomRefresher(
+          onRefresh: _onRefresh,
+          enablePullDown: true,
+          enableTwoLevel: false,
+          enablePullUp: false,
+          physics: const ScrollPhysics(),
+          refreshController: refreshController,
+          footer: FooterWidget(),
+          header: const WaterDropHeader(
+          refresh: SizedBox(width: 30, height: 30, child: CircularProgressIndicator(color: Colors.deepPurple, strokeWidth: 1.5),),
+          waterDropColor: Colors.deepPurple,
+        ),
+      ),
+      // Configure your `BottomLoader` 
+      bottomLoader: const BottomLoader(
+        height: 20,
+        width: 20,
+        indicatorColor: primaryColorA61561,
+        strokeWidth: 2,
+      ),
+      scrollController: _scrollController,
+      // orderBy is compulsary to enable pagination
+      query: Firestore.instance.collection('users').orderBy('name')
+      itemBuilderType: PaginateBuilderType.listView,
+      onEmpty: const Center(child: Text("No Data"),),
+      itemsPerPage: 4,
+      onError: (exception) => const Center(child: Text("Something went wrong")),
+      itemBuilder: (context, documentSnapshots, index) => ListTile(
+        leading: CircleAvatar(child: Icon(Icons.person)),
+        title: Text(documentSnapshots[index].data()['name']),
+        subtitle: Text(documentSnapshots[index].id),
+      ),
+    ),
+```
+
 ## Contributions
 
 Feel free to contribute to this project.
