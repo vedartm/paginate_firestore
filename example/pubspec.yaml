@@ -5,17 +5,19 @@ publish_to: "none"
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=3.13.0 <4.0.0"
+  flutter: ">=3.47.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  firebase_core: ^1.10.0
+  cloud_firestore: ^6.10.0
+  firebase_core: ^4.14.0
   paginate_firestore:
     path: ../
 
 dev_dependencies:
-  flutter_lints: ^1.0.4
+  flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
 

@@ -13,11 +13,12 @@ class PaginationError extends PaginationState {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is PaginationError && other.error == error;
+    return other is PaginationError &&
+        other.error.toString() == error.toString();
   }
 
   @override
-  int get hashCode => error.hashCode;
+  int get hashCode => error.toString().hashCode;
 }
 
 class PaginationLoaded extends PaginationState {
@@ -49,5 +50,6 @@ class PaginationLoaded extends PaginationState {
   }
 
   @override
-  int get hashCode => hasReachedEnd.hashCode ^ documentSnapshots.hashCode;
+  int get hashCode =>
+      Object.hash(hasReachedEnd, Object.hashAll(documentSnapshots));
 }

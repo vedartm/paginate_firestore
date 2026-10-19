@@ -2,6 +2,12 @@ import 'package:flutter/widgets.dart';
 
 class PaginateChangeListener extends ChangeNotifier {}
 
+/// Requests one failed page again without discarding successful pages.
+/// Does nothing when there is no error. Dispose this notifier in its owner.
+class PaginateRetryChangeListener extends PaginateChangeListener {
+  void retry() => notifyListeners();
+}
+
 class PaginateRefreshedChangeListener extends PaginateChangeListener {
   PaginateRefreshedChangeListener();
 
@@ -22,13 +28,11 @@ class PaginateRefreshedChangeListener extends PaginateChangeListener {
 class PaginateFilterChangeListener extends PaginateChangeListener {
   PaginateFilterChangeListener();
 
-  late String _filterTerm;
+  String _filterTerm = '';
 
   set searchTerm(String value) {
     _filterTerm = value;
-    if (value.isNotEmpty) {
-      notifyListeners();
-    }
+    notifyListeners();
   }
 
   String get searchTerm {
