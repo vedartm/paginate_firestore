@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart' as firestore;
 import 'package:firebase_core/firebase_core.dart';
 
 Future<void> main() async {
@@ -10,7 +10,7 @@ Future<void> main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatelessWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
       ),
       body: Scrollbar(
-        isAlwaysShown: true,
+        thumbVisibility: true,
         child: PaginateFirestore(
           // Use SliverAppBar in header to make it sticky
           header: const SliverToBoxAdapter(child: Text('HEADER')),
@@ -55,7 +55,9 @@ class HomePage extends StatelessWidget {
             );
           },
           // orderBy is compulsory to enable pagination
-          query: FirebaseFirestore.instance.collection('users').orderBy('name'),
+          query: firestore.FirebaseFirestore.instance
+              .collection('users')
+              .orderBy('name'),
           itemsPerPage: 5,
           // to fetch real-time data
           isLive: true,

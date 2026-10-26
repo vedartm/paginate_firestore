@@ -31,18 +31,21 @@ class PaginationCubit extends Cubit<PaginationState> {
     if (state is PaginationLoaded) {
       final loadedState = state as PaginationLoaded;
 
-      final filteredList = loadedState.documentSnapshots
-          .where((document) => document
-              .data()
-              .toString()
-              .toLowerCase()
-              .contains(searchTerm.toLowerCase()))
-          .toList();
+      final filteredList =
+          loadedState.documentSnapshots
+              .where(
+                (document) => document.data().toString().toLowerCase().contains(
+                  searchTerm.toLowerCase(),
+                ),
+              )
+              .toList();
 
-      emit(loadedState.copyWith(
-        documentSnapshots: filteredList,
-        hasReachedEnd: loadedState.hasReachedEnd,
-      ));
+      emit(
+        loadedState.copyWith(
+          documentSnapshots: filteredList,
+          hasReachedEnd: loadedState.hasReachedEnd,
+        ),
+      );
     }
   }
 
@@ -53,8 +56,8 @@ class PaginationCubit extends Cubit<PaginationState> {
       final listener = localQuery
           .snapshots(includeMetadataChanges: includeMetadataChanges)
           .listen((querySnapshot) {
-        _emitPaginatedState(querySnapshot.docs);
-      });
+            _emitPaginatedState(querySnapshot.docs);
+          });
 
       _streams.add(listener);
     } else {
@@ -67,7 +70,7 @@ class PaginationCubit extends Cubit<PaginationState> {
     isLive ? _getLiveDocuments() : _getDocuments();
   }
 
-  _getDocuments() async {
+  Future<void> _getDocuments() async {
     final localQuery = _getQuery();
     try {
       if (state is PaginationInitial) {
@@ -89,7 +92,7 @@ class PaginationCubit extends Cubit<PaginationState> {
     }
   }
 
-  _getLiveDocuments() {
+  void _getLiveDocuments() {
     final localQuery = _getQuery();
     if (state is PaginationInitial) {
       refreshPaginatedList();
@@ -99,13 +102,13 @@ class PaginationCubit extends Cubit<PaginationState> {
       final listener = localQuery
           .snapshots(includeMetadataChanges: includeMetadataChanges)
           .listen((querySnapshot) {
-        loadedState = state as PaginationLoaded;
-        _emitPaginatedState(
-          querySnapshot.docs,
-          previousList:
-              loadedState.documentSnapshots as List<QueryDocumentSnapshot>,
-        );
-      });
+            loadedState = state as PaginationLoaded;
+            _emitPaginatedState(
+              querySnapshot.docs,
+              previousList:
+                  loadedState.documentSnapshots as List<QueryDocumentSnapshot>,
+            );
+          });
 
       _streams.add(listener);
     }
@@ -116,10 +119,12 @@ class PaginationCubit extends Cubit<PaginationState> {
     List<QueryDocumentSnapshot> previousList = const [],
   }) {
     _lastDocument = newList.isNotEmpty ? newList.last : null;
-    emit(PaginationLoaded(
-      documentSnapshots: _mergeSnapshots(previousList, newList),
-      hasReachedEnd: newList.isEmpty,
-    ));
+    emit(
+      PaginationLoaded(
+        documentSnapshots: _mergeSnapshots(previousList, newList),
+        hasReachedEnd: newList.isEmpty,
+      ),
+    );
   }
 
   List<QueryDocumentSnapshot> _mergeSnapshots(
@@ -132,10 +137,11 @@ class PaginationCubit extends Cubit<PaginationState> {
   }
 
   Query _getQuery() {
-    var localQuery = (_lastDocument != null)
-        ? _query.startAfterDocument(_lastDocument!)
-        : _startAfterDocument != null
-            ? _query.startAfterDocument(_startAfterDocument!)
+    var localQuery =
+        (_lastDocument != null)
+            ? _query.startAfterDocument(_lastDocument!)
+            : _startAfterDocument != null
+            ? _query.startAfterDocument(_startAfterDocument)
             : _query;
     localQuery = localQuery.limit(_limit);
     return localQuery;
